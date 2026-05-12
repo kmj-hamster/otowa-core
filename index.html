@@ -1,0 +1,3534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Otowa</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            color: #c8d4c8;
+            line-height: 2;
+        }
+
+        /* Pages */
+        .page {
+            display: none;
+            min-height: 100vh;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* Page 1: Opening */
+        .page-opening {
+            background: linear-gradient(180deg, #0a0f0a 0%, #1a2e1a 30%, #0d1a0d 70%, #0a0f0a 100%);
+            background-attachment: fixed;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 100px 60px 150px;
+        }
+
+        /* Title */
+        .title-section {
+            text-align: center;
+            padding: 15vh 0 20vh;
+        }
+
+        .title-section h1 {
+            font-size: 4.5rem;
+            font-weight: 400;
+            letter-spacing: 0.4em;
+            color: #8fbc8f;
+            margin-bottom: 0.4em;
+            text-shadow: 0 0 60px rgba(100, 160, 100, 0.3);
+        }
+
+        .title-section .subtitle {
+            font-size: 1rem;
+            letter-spacing: 0.3em;
+            color: #5a7a5a;
+            text-transform: uppercase;
+        }
+
+        /* Paragraphs */
+        .paragraph {
+            font-size: 1.35rem;
+            line-height: 2.1;
+            margin-bottom: 1.8em;
+            letter-spacing: 0.02em;
+            text-shadow: 0 0 30px rgba(100, 140, 100, 0.1);
+        }
+
+        .highlight {
+            color: #8fbc8f;
+            font-weight: 500;
+        }
+
+        .dialogue {
+            color: #a8c8a8;
+            font-style: italic;
+        }
+
+        .surprise {
+            color: #d4a8a8;
+        }
+
+        /* Scene breaks */
+        .scene-break {
+            text-align: center;
+            padding: 3em 0;
+            color: #3a5a3a;
+            font-size: 1.8rem;
+            letter-spacing: 0.6em;
+        }
+
+        .section {
+            margin-bottom: 1em;
+        }
+
+        .ending {
+            text-align: center;
+            padding-top: 2em;
+            color: #4a6a4a;
+            font-size: 1.5rem;
+            letter-spacing: 0.5em;
+        }
+
+        /* Navigation */
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            padding: 60px 0 80px;
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: 1px solid #4a6a4a;
+            color: #8fbc8f;
+            padding: 12px 36px;
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 1.1rem;
+            letter-spacing: 0.15em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: rgba(100, 160, 100, 0.1);
+            border-color: #8fbc8f;
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        /* Letter Pages - Wooden table feel */
+        .page-letter {
+            background: linear-gradient(180deg, #2a2218 0%, #3d3024 30%, #2f261c 70%, #252015 100%);
+            background-attachment: fixed;
+            color: #d4cdc0;
+        }
+
+        .letter-container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 80px 60px 100px;
+        }
+
+        .letter-paper {
+            background: linear-gradient(180deg, #c4b8a0 0%, #b8ab94 50%, #c0b49c 100%);
+            padding: 60px 70px;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2);
+            border: none;
+            position: relative;
+        }
+
+        .letter-paper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noise)" opacity="0.03"/></svg>');
+            pointer-events: none;
+        }
+
+        .letter-title {
+            text-align: center;
+            font-size: 1.4rem;
+            color: #5a5248;
+            letter-spacing: 0.2em;
+            margin-bottom: 2.5em;
+            font-weight: 500;
+        }
+
+        .letter-text {
+            font-size: 1.25rem;
+            line-height: 2.2;
+            margin-bottom: 1.5em;
+            color: #3a352e;
+        }
+
+        .letter-signature {
+            text-align: right;
+            font-style: italic;
+            margin-top: 2em;
+            color: #4a453e;
+        }
+
+        .letter-warning {
+            text-align: center;
+            color: #6a3a3a;
+            font-weight: 600;
+            margin-top: 2.5em;
+            font-size: 1.1rem;
+        }
+
+        .letter-center {
+            text-align: center;
+            font-size: 1.4rem;
+            padding: 3em 0;
+        }
+
+        .letter-big {
+            font-size: 1.6rem;
+            color: #5a2a2a;
+            font-weight: 600;
+        }
+
+        .letter-dots {
+            color: #6a655c;
+            letter-spacing: 0.1em;
+        }
+
+        .redacted {
+            background: #2a2520;
+            color: #2a2520;
+            padding: 2px 8px;
+            border-radius: 2px;
+            user-select: none;
+        }
+
+        .letter-emphasis {
+            color: #4a5a3a;
+            font-weight: 600;
+        }
+
+        .letter-highlight {
+            background: linear-gradient(180deg, transparent 60%, rgba(90, 110, 70, 0.25) 60%);
+            padding: 0 4px;
+        }
+
+        .job-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #4a453e;
+            margin-bottom: 1.5em;
+            padding-bottom: 0.5em;
+            border-bottom: 2px solid #9a9080;
+        }
+
+        .job-item {
+            margin-bottom: 1.8em;
+        }
+
+        .job-item strong {
+            color: #4a5a3a;
+        }
+
+        .letter-goodbye {
+            text-align: center;
+            font-size: 1.5rem;
+            color: #4a5a3a;
+            margin-top: 2em;
+            font-weight: 600;
+        }
+
+        /* Letter nav buttons */
+        .page-letter .nav-buttons {
+            padding-top: 40px;
+        }
+
+        .page-letter .nav-btn {
+            border-color: #5a5248;
+            color: #c4b8a0;
+        }
+
+        .page-letter .nav-btn:hover {
+            background: rgba(180, 160, 130, 0.15);
+            border-color: #8a7a68;
+        }
+
+        /* Page 8: Items obtained */
+        .page-items {
+            background: linear-gradient(180deg, #2a2218 0%, #3d3024 30%, #2f261c 70%, #252015 100%);
+            background-attachment: fixed;
+        }
+
+        .items-container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 80px 60px 100px;
+            text-align: center;
+        }
+
+        .items-title {
+            font-size: 1.8rem;
+            color: #c4b8a0;
+            letter-spacing: 0.2em;
+            margin-bottom: 2em;
+        }
+
+        .items-panel {
+            padding: 20px;
+        }
+
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            justify-items: center;
+        }
+
+        .item-card {
+            position: relative;
+            width: 140px;
+            height: 140px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .item-glow {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(100, 160, 100, 0.35) 0%, transparent 70%);
+            animation: pulse-glow 3s ease-in-out infinite;
+        }
+
+        .item-card:nth-child(1) .item-glow {
+            animation-delay: 0s;
+        }
+        .item-card:nth-child(2) .item-glow {
+            animation-delay: 0.5s;
+        }
+        .item-card:nth-child(3) .item-glow {
+            animation-delay: 1s;
+        }
+        .item-card:nth-child(4) .item-glow {
+            animation-delay: 1.5s;
+            background: radial-gradient(circle, rgba(120, 100, 180, 0.4) 0%, transparent 70%);
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.6;
+            }
+            50% {
+                transform: scale(1.15);
+                opacity: 1;
+            }
+        }
+
+        .item-card img {
+            position: relative;
+            z-index: 1;
+            width: 120px;
+            height: 120px;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+
+        .item-card:hover img {
+            transform: scale(1.1);
+        }
+
+        .page-items .nav-buttons {
+            margin-top: 40px;
+        }
+
+        .page-items .nav-btn {
+            border-color: #5a5248;
+            color: #c4b8a0;
+        }
+
+        .page-items .nav-btn:hover {
+            background: rgba(180, 160, 130, 0.15);
+            border-color: #8a7a68;
+        }
+
+        /* Page 9: Map */
+        .page-map {
+            background: linear-gradient(180deg, #0a0f0a 0%, #1a2e1a 30%, #0d1a0d 70%, #0a0f0a 100%);
+            background-attachment: fixed;
+        }
+
+        .map-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 60px 40px 100px;
+            text-align: center;
+        }
+
+        .map-title {
+            font-size: 2rem;
+            color: #8fbc8f;
+            letter-spacing: 0.25em;
+            margin-bottom: 1em;
+            text-shadow: 0 0 40px rgba(100, 160, 100, 0.3);
+        }
+
+        .map-subtitle {
+            font-size: 1.1rem;
+            color: #5a7a5a;
+            margin-bottom: 3em;
+            letter-spacing: 0.1em;
+        }
+
+        .map-area {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            border: 1px solid rgba(100, 160, 100, 0.2);
+            background: radial-gradient(ellipse at center, rgba(30, 60, 30, 0.4) 0%, transparent 70%);
+            overflow: hidden;
+        }
+
+        .map-location {
+            position: absolute;
+            padding: 12px 20px;
+            background: rgba(20, 40, 20, 0.8);
+            border: 1px solid #4a6a4a;
+            color: #a8c8a8;
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 1.15rem;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .map-location:hover {
+            background: rgba(60, 100, 60, 0.6);
+            border-color: #8fbc8f;
+            color: #c8e8c8;
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(100, 160, 100, 0.3);
+        }
+
+        .map-location::before {
+            content: '';
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #8fbc8f;
+            border-radius: 50%;
+            top: 50%;
+            left: -16px;
+            transform: translateY(-50%);
+            box-shadow: 0 0 10px rgba(100, 160, 100, 0.5);
+        }
+
+        .loc-station { top: 72%; left: 50%; transform: translateX(-50%); }
+        .loc-station:hover { transform: translateX(-50%) scale(1.05); }
+        .loc-hotspring { top: 15%; left: 20%; }
+        .loc-ryotei { top: 40%; left: 65%; }
+        .loc-forest { top: 10%; left: 55%; }
+        .loc-pub { top: 55%; left: 25%; }
+        .loc-playground { top: 65%; left: 70%; }
+
+        .map-toast {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(20, 40, 20, 0.95);
+            border: 1px solid #4a6a4a;
+            color: #a8c8a8;
+            padding: 16px 32px;
+            font-size: 1.2rem;
+            letter-spacing: 0.1em;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            z-index: 10;
+        }
+
+        .map-toast.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Item obtained display */
+        .item-obtained {
+            text-align: center;
+            padding: 2em 0;
+            margin: 1.5em 0;
+            border: 1px solid rgba(100, 160, 100, 0.3);
+            background: rgba(30, 60, 30, 0.3);
+        }
+
+        .item-obtained-text {
+            font-size: 1.3rem;
+            color: #8fbc8f;
+            letter-spacing: 0.15em;
+            margin-bottom: 1em;
+        }
+
+        .item-obtained-img {
+            width: 120px;
+            height: 120px;
+            object-fit: contain;
+        }
+
+        .page-map .nav-buttons {
+            margin-top: 40px;
+        }
+
+        /* Note Button on Map */
+        .note-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px 18px;
+            background: rgba(30, 25, 20, 0.95);
+            border: 1px solid #5a4a3a;
+            color: #c4b8a0;
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 1rem;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 5;
+        }
+
+        .note-btn:hover {
+            background: rgba(50, 40, 30, 0.95);
+            border-color: #8a7a68;
+            color: #d4cdc0;
+        }
+
+        .note-btn.blink {
+            animation: noteBlink 1.2s ease-in-out infinite;
+        }
+
+        @keyframes noteBlink {
+            0%, 100% {
+                background: rgba(30, 25, 20, 0.95);
+                border-color: #5a4a3a;
+                box-shadow: none;
+            }
+            50% {
+                background: rgba(80, 65, 45, 0.95);
+                border-color: #c4b8a0;
+                box-shadow: 0 0 15px rgba(196, 184, 160, 0.5);
+            }
+        }
+
+        /* Note Page */
+        .page-note {
+            background: linear-gradient(180deg, #2a2218 0%, #3d3024 30%, #2f261c 70%, #252015 100%);
+            background-attachment: fixed;
+            color: #d4cdc0;
+        }
+
+        .note-container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 80px 60px 100px;
+            position: relative;
+        }
+
+        .note-paper {
+            background: linear-gradient(180deg, #c4b8a0 0%, #b8ab94 50%, #c0b49c 100%);
+            padding: 50px 60px;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2);
+            border: none;
+            position: relative;
+            min-height: 500px;
+        }
+
+        .note-paper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noise)" opacity="0.03"/></svg>');
+            pointer-events: none;
+        }
+
+        .note-header {
+            text-align: center;
+            font-size: 1.5rem;
+            color: #5a5248;
+            letter-spacing: 0.15em;
+            margin-bottom: 1em;
+            font-weight: 500;
+        }
+
+        .note-section-title {
+            font-size: 1.2rem;
+            color: #4a5a3a;
+            font-weight: 600;
+            margin: 1.5em 0 0.8em;
+            padding-bottom: 0.3em;
+            border-bottom: 1px solid #9a9080;
+        }
+
+        .note-text {
+            font-size: 1.15rem;
+            line-height: 2;
+            margin-bottom: 1em;
+            color: #3a352e;
+        }
+
+        .note-locked {
+            text-align: center;
+            padding: 3em 0;
+            color: #7a756e;
+            font-style: italic;
+            font-size: 1.2rem;
+        }
+
+        .note-page-content {
+            display: none;
+        }
+
+        .note-page-content.active {
+            display: block;
+        }
+
+        /* Note pagination buttons */
+        .note-pagination {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 100;
+        }
+
+        .note-pagination.left {
+            left: calc(50% - 400px);
+        }
+
+        .note-pagination.right {
+            right: calc(50% - 400px);
+        }
+
+        @media (max-width: 900px) {
+            .note-pagination.left {
+                left: 20px;
+            }
+            .note-pagination.right {
+                right: 20px;
+            }
+        }
+
+        .note-page-btn {
+            width: 40px;
+            height: 60px;
+            background: rgba(50, 40, 30, 0.9);
+            border: 1px solid #5a5248;
+            color: #c4b8a0;
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .note-page-btn:hover {
+            background: rgba(70, 60, 50, 0.95);
+            border-color: #8a7a68;
+            color: #d4cdc0;
+        }
+
+        .note-page-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .note-page-indicator {
+            text-align: center;
+            margin-top: 1.5em;
+            font-size: 1rem;
+            color: #6a655c;
+            letter-spacing: 0.1em;
+        }
+
+        .page-note .nav-buttons {
+            padding-top: 30px;
+        }
+
+        .page-note .nav-btn {
+            border-color: #5a5248;
+            color: #c4b8a0;
+        }
+
+        .page-note .nav-btn:hover {
+            background: rgba(180, 160, 130, 0.15);
+            border-color: #8a7a68;
+        }
+
+        .nav-btn.next-day {
+            background: rgba(30, 25, 20, 0.95);
+            border-color: #5a4a3a;
+            color: #c4b8a0;
+        }
+
+        .nav-btn.next-day:hover {
+            background: rgba(50, 40, 30, 0.95);
+            border-color: #8a7a68;
+            color: #d4cdc0;
+        }
+
+        /* Page navigation (top right) */
+        .page-nav {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: none;
+            gap: 8px;
+            z-index: 100;
+        }
+
+        .page-nav.debug {
+            display: flex;
+        }
+
+        .page-nav-btn {
+            width: 32px;
+            height: 32px;
+            border: 1px solid rgba(150, 150, 150, 0.5);
+            background: rgba(0, 0, 0, 0.3);
+            color: #aaa;
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .page-nav-btn:hover {
+            background: rgba(100, 160, 100, 0.3);
+            border-color: #8fbc8f;
+            color: #8fbc8f;
+        }
+
+        .page-nav-btn.active {
+            background: rgba(100, 160, 100, 0.4);
+            border-color: #8fbc8f;
+            color: #8fbc8f;
+        }
+
+        /* Tutorial Page */
+        .page-tutorial {
+            background: linear-gradient(180deg, #2a2218 0%, #3d3024 30%, #2f261c 70%, #252015 100%);
+            background-attachment: fixed;
+            color: #d4cdc0;
+            min-height: 100vh;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .page-tutorial.active {
+            display: flex;
+        }
+
+        .tutorial-container {
+            max-width: 750px;
+            margin: 0 auto;
+            padding: 30px 60px;
+            max-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .tutorial-paper {
+            background: linear-gradient(180deg, #c4b8a0 0%, #b8ab94 50%, #c0b49c 100%);
+            padding: 35px 50px;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .tutorial-paper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noise)" opacity="0.03"/></svg>');
+            pointer-events: none;
+        }
+
+        .tutorial-title {
+            text-align: center;
+            font-size: 1.5rem;
+            color: #5a5248;
+            letter-spacing: 0.15em;
+            margin-bottom: 1em;
+            font-weight: 500;
+        }
+
+        .tutorial-text {
+            font-size: 1.15rem;
+            line-height: 1.6;
+            margin-bottom: 0.8em;
+            color: #3a352e;
+            text-align: center;
+        }
+
+        .tutorial-step {
+            display: none;
+        }
+
+        .tutorial-step.active {
+            display: block;
+        }
+
+        /* Tutorial Items Grid */
+        .tutorial-items-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            margin: 1em 0;
+        }
+
+        .tutorial-item {
+            width: 85px;
+            height: 85px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+
+        .tutorial-item.clickable {
+            cursor: pointer;
+        }
+
+        .tutorial-item.clickable:hover {
+            background: rgba(255, 255, 255, 0.5);
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .tutorial-item.selected {
+            background: rgba(100, 160, 100, 0.4);
+            box-shadow: 0 0 20px rgba(100, 160, 100, 0.5);
+        }
+
+        .tutorial-item.wrong {
+            animation: shake 0.5s ease;
+            background: rgba(180, 100, 100, 0.3);
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .tutorial-item img {
+            width: 70px;
+            height: 70px;
+            object-fit: contain;
+        }
+
+        /* Tutorial Labels */
+        .tutorial-label-container {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin: 0.8em 0;
+        }
+
+        .tutorial-label {
+            padding: 8px 16px;
+            background: #e8e0d0;
+            border: 1px solid #9a9080;
+            border-radius: 20px;
+            font-size: 1rem;
+            color: #4a453e;
+            transition: all 0.3s ease;
+        }
+
+        .tutorial-label.hidden {
+            background: #8a8070;
+            color: #8a8070;
+        }
+
+        .tutorial-label.revealed {
+            animation: labelReveal 0.5s ease forwards;
+        }
+
+        @keyframes labelReveal {
+            0% {
+                background: #8a8070;
+                color: #8a8070;
+            }
+            100% {
+                background: #e8e0d0;
+                color: #4a453e;
+            }
+        }
+
+        .tutorial-label.highlight {
+            background: #4a5a3a;
+            color: #e8e0d0;
+            border-color: #4a5a3a;
+        }
+
+        .tutorial-label.fixed {
+            background: #3a4a2a;
+            color: #e8e0d0;
+            border-color: #3a4a2a;
+            box-shadow: 0 0 10px rgba(100, 160, 100, 0.5);
+        }
+
+        /* Tutorial Label Pool */
+        .tutorial-pool {
+            background: rgba(60, 50, 40, 0.2);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 1em 0;
+        }
+
+        .tutorial-pool-title {
+            font-size: 0.9rem;
+            color: #6a655c;
+            text-align: center;
+            margin-bottom: 0.8em;
+            letter-spacing: 0.1em;
+        }
+
+        /* Tutorial Passenger */
+        .tutorial-passenger {
+            text-align: center;
+            margin: 1em 0;
+        }
+
+        .tutorial-passenger-bubble {
+            display: inline-block;
+            background: #e8e0d0;
+            border: 2px solid #9a9080;
+            border-radius: 20px;
+            padding: 12px 25px;
+            font-size: 1.2rem;
+            color: #4a453e;
+            position: relative;
+            margin-bottom: 1em;
+        }
+
+        .tutorial-passenger-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 12px solid transparent;
+            border-right: 12px solid transparent;
+            border-top: 12px solid #e8e0d0;
+        }
+
+        .tutorial-passenger-icon {
+            font-size: 2.5rem;
+            margin-top: 0.3em;
+        }
+
+        /* Tutorial Featured Item */
+        .tutorial-featured {
+            text-align: center;
+            margin: 1em 0;
+        }
+
+        .tutorial-featured img {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+        }
+
+        .tutorial-featured-name {
+            font-size: 1.1rem;
+            color: #5a5248;
+            margin-top: 0.5em;
+            font-weight: 500;
+        }
+
+        /* Tutorial Success */
+        .tutorial-success {
+            text-align: center;
+            padding: 1em 0;
+        }
+
+        .tutorial-counter {
+            display: inline-block;
+            background: #4a5a3a;
+            color: #e8e0d0;
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-size: 1.2rem;
+            margin: 1em 0;
+        }
+
+        /* Tutorial Feedback */
+        .tutorial-feedback {
+            text-align: center;
+            font-size: 1rem;
+            color: #8a5a5a;
+            margin-top: 1em;
+            min-height: 1.5em;
+        }
+
+        .tutorial-feedback.success {
+            color: #4a5a3a;
+        }
+
+        /* Tutorial Navigation */
+        .page-tutorial .nav-buttons {
+            padding-top: 20px;
+            flex-shrink: 0;
+        }
+
+        .page-tutorial .nav-btn {
+            border-color: #5a5248;
+            color: #c4b8a0;
+        }
+
+        .page-tutorial .nav-btn:hover {
+            background: rgba(180, 160, 130, 0.15);
+            border-color: #8a7a68;
+        }
+
+        .tutorial-step-indicator {
+            text-align: center;
+            color: #7a756e;
+            font-size: 0.9rem;
+            margin-top: 1em;
+            letter-spacing: 0.1em;
+        }
+
+        /* Drag and Drop System */
+        .tutorial-drag-area {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 18px;
+            margin: 1em 0;
+        }
+
+        .tutorial-item-with-slots {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tutorial-slots {
+            display: flex;
+            gap: 5px;
+        }
+
+        .tutorial-slot {
+            width: 70px;
+            height: 28px;
+            border: 2px dashed #9a9080;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            color: #9a9080;
+            transition: all 0.2s ease;
+        }
+
+        .tutorial-slot.drag-over {
+            border-color: #4a5a3a;
+            background: rgba(100, 160, 100, 0.2);
+            transform: scale(1.05);
+        }
+
+        .tutorial-slot.filled {
+            border-style: solid;
+            border-color: #7a756e;
+            background: #e8e0d0;
+            cursor: pointer;
+        }
+
+        .tutorial-slot.filled:hover {
+            background: #d8c8b0;
+            border-color: #8a5a5a;
+        }
+
+        .tutorial-slot-label {
+            font-size: 0.7rem;
+            color: #4a453e;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding: 0 4px;
+        }
+
+        .tutorial-label.draggable {
+            cursor: grab;
+            user-select: none;
+            transition: all 0.2s ease;
+        }
+
+        .tutorial-label.draggable:hover {
+            background: #d8d0c0;
+            transform: scale(1.05);
+        }
+
+        .tutorial-label.dragging {
+            opacity: 0.5;
+            cursor: grabbing;
+        }
+
+        .tutorial-label.in-slot {
+            display: none;
+        }
+
+        .tutorial-item-small {
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+        }
+
+        .tutorial-item-small img {
+            width: 55px;
+            height: 55px;
+            object-fit: contain;
+        }
+
+        .tutorial-drag-hint {
+            text-align: center;
+            font-size: 0.95rem;
+            color: #6a655c;
+            margin-top: 1em;
+            font-style: italic;
+        }
+
+        /* Day 2 Gameplay */
+        .page-day2 {
+            background: linear-gradient(180deg, #2a2218 0%, #3d3024 30%, #2f261c 70%, #252015 100%);
+            background-attachment: fixed;
+            color: #d4cdc0;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        .day2-layout {
+            display: flex;
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px 30px 60px;
+            gap: 30px;
+            min-height: 100vh;
+        }
+
+        /* Left side: Journal */
+        .day2-journal-panel {
+            flex: 0 0 500px;
+            width: 500px;
+            display: flex;
+            flex-direction: row;
+            align-items: stretch;
+            position: relative;
+            gap: 10px;
+            max-height: calc(100vh - 80px);
+        }
+
+        .day2-journal-side-btn {
+            background: transparent;
+            border: 1px solid #5a5248;
+            color: #c4b8a0;
+            width: 36px;
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            align-self: center;
+            height: 80px;
+        }
+
+        .day2-journal-side-btn:hover {
+            background: rgba(180, 160, 130, 0.2);
+            border-color: #8a7a68;
+        }
+
+        .day2-journal-side-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .day2-journal-wrapper {
+            background: linear-gradient(180deg, #c4b8a0 0%, #b8ab94 50%, #c0b49c 100%);
+            padding: 35px 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .day2-journal-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noise)" opacity="0.03"/></svg>');
+            pointer-events: none;
+        }
+
+        .day2-journal-header {
+            text-align: center;
+            font-size: 1.4rem;
+            color: #5a5248;
+            letter-spacing: 0.15em;
+            margin-bottom: 0.8em;
+            font-weight: 500;
+            position: relative;
+            z-index: 1;
+        }
+
+        .day2-journal-content {
+            flex: 1;
+            overflow-y: auto;
+            position: relative;
+            z-index: 1;
+            padding-right: 10px;
+        }
+
+        .day2-journal-content::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .day2-journal-content::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 3px;
+        }
+
+        .day2-journal-content::-webkit-scrollbar-thumb {
+            background: rgba(90, 82, 72, 0.4);
+            border-radius: 3px;
+        }
+
+        .day2-journal-page {
+            display: none;
+        }
+
+        .day2-journal-page.active {
+            display: block;
+        }
+
+        .day2-journal-section-title {
+            font-size: 1.3rem;
+            color: #4a5a3a;
+            font-weight: 600;
+            margin-bottom: 0.8em;
+            border-bottom: 1px solid rgba(90, 82, 72, 0.3);
+            padding-bottom: 0.5em;
+        }
+
+        .day2-journal-text {
+            font-size: 1.15rem;
+            line-height: 1.9;
+            color: #3a352e;
+            margin-bottom: 1em;
+        }
+
+        .day2-journal-footer {
+            text-align: center;
+            margin-top: 1em;
+            padding-top: 1em;
+            border-top: 1px solid rgba(90, 82, 72, 0.3);
+            position: relative;
+            z-index: 1;
+            flex-shrink: 0;
+        }
+
+        .day2-journal-indicator {
+            font-size: 1rem;
+            color: #6a655c;
+        }
+
+        /* Right side: Game UI */
+        .day2-game-panel {
+            flex: 1 0 auto;
+            display: flex;
+            flex-direction: column;
+            width: calc(100% - 530px);
+        }
+
+        .day2-container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0;
+        }
+
+        #day2-game-area {
+            width: 100%;
+        }
+
+        .day2-header {
+            text-align: center;
+            margin-bottom: 0.8em;
+        }
+
+        .day2-title {
+            font-size: 1.5rem;
+            color: #c4b8a0;
+            letter-spacing: 0.15em;
+        }
+
+        /* Passenger counter - bottom right */
+        .day2-counter-wrapper {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 100;
+        }
+
+        .day2-counter {
+            background: linear-gradient(180deg, #3d3024 0%, #2a2218 100%);
+            border: 2px solid #6a5a48;
+            padding: 15px 25px;
+            font-size: 1.3rem;
+            color: #c4b8a0;
+            letter-spacing: 0.1em;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            position: relative;
+        }
+
+        .day2-counter #day2-score {
+            color: #a8c8a8;
+            font-weight: 600;
+            font-size: 1.5rem;
+        }
+
+        /* +1 Animation */
+        .day2-plus-one {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            color: #8fbc8f;
+            font-size: 1.4rem;
+            font-weight: 600;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .day2-plus-one.animate {
+            animation: plusOneFloat 1s ease-out forwards;
+        }
+
+        @keyframes plusOneFloat {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+            50% {
+                opacity: 1;
+                transform: translateY(-20px) scale(1.2);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-40px) scale(1);
+            }
+        }
+
+        .day2-passenger-box {
+            background: linear-gradient(180deg, #c4b8a0 0%, #b8ab94 50%, #c0b49c 100%);
+            padding: 15px 25px;
+            margin-bottom: 1em;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            position: relative;
+            width: 100%;
+            min-height: 160px;
+        }
+
+        .day2-passenger-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noise)" opacity="0.03"/></svg>');
+            pointer-events: none;
+        }
+
+        .day2-passenger-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 0.8em;
+            padding-bottom: 0.6em;
+            border-bottom: 1px solid rgba(90, 82, 72, 0.2);
+        }
+
+        .day2-passenger-avatar {
+            font-size: 2rem;
+            line-height: 1;
+        }
+
+        .day2-passenger-number {
+            font-size: 0.95rem;
+            color: #6a655c;
+            letter-spacing: 0.05em;
+        }
+
+        .day2-passenger-number span {
+            color: #4a5a3a;
+            font-weight: 600;
+        }
+
+        .day2-dialogue {
+            font-size: 1.15rem;
+            line-height: 1.6;
+            color: #3a352e;
+            margin-bottom: 0.6em;
+            font-style: italic;
+        }
+
+        .day2-request {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.05rem;
+            color: #5a5248;
+        }
+
+        .day2-request-label {
+            display: inline-block;
+            padding: 6px 16px;
+            background: #4a5a3a;
+            color: #e8e0d0;
+            border-radius: 15px;
+            font-weight: 500;
+            font-style: normal;
+        }
+
+        .day2-items-section {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 1em;
+        }
+
+        .day2-items-title {
+            text-align: center;
+            font-size: 1rem;
+            color: #8a8070;
+            letter-spacing: 0.12em;
+            margin-bottom: 0.6em;
+        }
+
+        .day2-items-grid {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .day2-item-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            transition: transform 0.2s ease;
+        }
+
+        .day2-item-slots {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .day2-slot {
+            width: 100px;
+            height: 24px;
+            border: 1px dashed #5a5248;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            color: #7a756e;
+            transition: all 0.2s ease;
+        }
+
+        .day2-slot.drag-over {
+            border-color: #8fbc8f;
+            background: rgba(100, 160, 100, 0.2);
+        }
+
+        .day2-slot.filled {
+            border-style: solid;
+            border-color: #7a756e;
+            background: rgba(200, 190, 170, 0.9);
+        }
+
+        .day2-slot.filled:hover {
+            background: rgba(180, 150, 140, 0.9);
+            border-color: #8a5a5a;
+        }
+
+        .day2-slot.fixed {
+            border-color: #4a5a3a;
+            background: rgba(100, 140, 100, 0.8);
+        }
+
+        .day2-slot.fixed .day2-slot-text {
+            color: #e8e0d0;
+        }
+
+        .day2-slot-text {
+            font-size: 0.85rem;
+            color: #4a453e;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding: 0 8px;
+        }
+
+        .day2-item-img {
+            width: 85px;
+            height: 85px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .day2-item-img:hover {
+            background: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 0 15px rgba(200, 180, 150, 0.3);
+            transform: scale(1.05);
+        }
+
+        .day2-item-img img {
+            width: 68px;
+            height: 68px;
+            object-fit: contain;
+        }
+
+        .day2-item-name {
+            font-size: 1rem;
+            color: #a8a090;
+            text-align: center;
+        }
+
+        .day2-pool {
+            background: rgba(0, 0, 0, 0.15);
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 0.8em;
+        }
+
+        .day2-pool-title {
+            text-align: center;
+            font-size: 0.8rem;
+            color: #7a756e;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.4em;
+        }
+
+        .day2-pool-labels {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .day2-label {
+            padding: 5px 12px;
+            background: #c4b8a0;
+            border: 1px solid #9a9080;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            color: #4a453e;
+            cursor: grab;
+            user-select: none;
+            transition: all 0.2s ease;
+        }
+
+        .day2-label:hover {
+            background: #d4c8b0;
+            transform: scale(1.05);
+        }
+
+        .day2-label.dragging {
+            opacity: 0.5;
+            cursor: grabbing;
+        }
+
+        .day2-label.in-slot {
+            display: none;
+        }
+
+        .day2-label.fixed {
+            display: none;
+        }
+
+        .day2-feedback {
+            display: none;
+            text-align: center;
+            font-size: 1.2rem;
+            padding: 10px 0;
+            font-weight: 500;
+        }
+
+        .day2-feedback.show {
+            display: block;
+        }
+
+        .day2-feedback.success {
+            color: #4a5a3a;
+        }
+
+        .day2-feedback.error {
+            color: #6a3a3a;
+        }
+
+        #day2-passenger-content.hidden {
+            display: none;
+        }
+
+        .day2-hint {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #6a655c;
+            font-style: italic;
+        }
+
+        /* Day 2 Summary */
+        .day2-summary {
+            text-align: center;
+            padding: 2em 0;
+        }
+
+        .day2-summary-title {
+            font-size: 1.8rem;
+            color: #c4b8a0;
+            letter-spacing: 0.15em;
+            margin-bottom: 0.5em;
+        }
+
+        .day2-summary-score {
+            font-size: 1.3rem;
+            color: #a8c8a8;
+            margin-bottom: 1.5em;
+        }
+
+        .day2-summary-text {
+            font-size: 1.1rem;
+            color: #a8a090;
+            line-height: 1.8;
+        }
+
+        .page-day2 .nav-buttons {
+            padding-top: 20px;
+        }
+
+        .page-day2 .nav-btn {
+            border-color: #5a5248;
+            color: #c4b8a0;
+        }
+
+        .page-day2 .nav-btn:hover {
+            background: rgba(180, 160, 130, 0.15);
+            border-color: #8a7a68;
+        }
+
+        /* Thanks Page - Green Theme */
+        .page-thanks {
+            background: linear-gradient(180deg, #0a1a0a 0%, #1a3a1a 30%, #0d2a0d 70%, #0a1a0a 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .page-thanks.active {
+            display: flex;
+        }
+
+        .thanks-container {
+            text-align: center;
+            padding: 60px;
+        }
+
+        .thanks-emoji {
+            font-size: 4rem;
+            margin-bottom: 0.5em;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .thanks-title {
+            font-size: 2.5rem;
+            color: #8fbc8f;
+            letter-spacing: 0.15em;
+            margin-bottom: 0.5em;
+            text-shadow: 0 0 40px rgba(100, 180, 100, 0.4);
+        }
+
+        .thanks-subtitle {
+            font-size: 1.3rem;
+            color: #6a9a6a;
+            letter-spacing: 0.1em;
+            margin-bottom: 2em;
+        }
+
+        .thanks-message {
+            font-size: 1.15rem;
+            color: #a8c8a8;
+            line-height: 2;
+            max-width: 500px;
+            margin: 0 auto 2em;
+        }
+
+        .thanks-decoration {
+            color: #3a5a3a;
+            font-size: 1.5rem;
+            letter-spacing: 0.5em;
+            margin-top: 2em;
+        }
+    </style>
+</head>
+<body>
+    <!-- Page Navigation -->
+    <div class="page-nav">
+        <button class="page-nav-btn active" onclick="goToPage(1)">1</button>
+        <button class="page-nav-btn" onclick="goToPage(2)">2</button>
+        <button class="page-nav-btn" onclick="goToPage(3)">3</button>
+        <button class="page-nav-btn" onclick="goToPage(4)">4</button>
+        <button class="page-nav-btn" onclick="goToPage(5)">5</button>
+        <button class="page-nav-btn" onclick="goToPage(6)">6</button>
+        <button class="page-nav-btn" onclick="goToPage(7)">7</button>
+        <button class="page-nav-btn" onclick="goToPage(8)">8</button>
+        <button class="page-nav-btn" onclick="goToPage(9)">9</button>
+        <button class="page-nav-btn" onclick="goToPage('tutorial')">10</button>
+        <button class="page-nav-btn" onclick="startDay2()">11</button>
+    </div>
+
+    <!-- Page 1: Opening Story -->
+    <div class="page page-opening active" id="page-1">
+        <div class="container">
+            <div class="title-section">
+                <h1>OTOWA</h1>
+                <p class="subtitle">A Story Begins</p>
+            </div>
+
+            <div class="section">
+                <p class="paragraph">The train slowly pulls out of the station. You look out at the grey skyscrapers and the exhausted faces of the passengers around you.</p>
+                <p class="paragraph">Your name is <span class="highlight">Rin</span>. A few days ago, you handed in your resignation. It's hard to explain exactly why, but you just felt like you could barely breathe in the city anymore.</p>
+                <p class="paragraph">You wanted to find a quiet place to completely clear your head. That's when you saw <span class="highlight">Hikaru's</span> post.</p>
+                <p class="paragraph">He was working at a train station in a small mountain village and posted a job ad online because he was leaving.</p>
+                <p class="paragraph">The attached photos hooked you. You immediately knew you wanted to go to that lush, green place.</p>
+            </div>
+
+            <div class="scene-break">~ ~ ~</div>
+
+            <div class="section">
+                <p class="paragraph">The train picks up speed, leaving the towering buildings far behind.</p>
+                <p class="paragraph">The view suddenly opens up: spring meadows and mountains on your left, and a sparkling, sunlit sea on your right. Even the air in the train car feels fresher.</p>
+                <p class="paragraph">As the train heads deeper into the mountains, the shadows of giant trees cast a dim light over the cabin.</p>
+                <p class="paragraph">You hear the whistle blow. The train slows to a halt. You've arrived.</p>
+                <p class="paragraph">This is your destination: <span class="highlight">Otowa</span>.</p>
+            </div>
+
+            <div class="scene-break">~ ~ ~</div>
+
+            <div class="section">
+                <p class="paragraph">On the platform, an elderly woman in a black kimono bows to you.</p>
+                <p class="paragraph"><span class="dialogue">"You must be Rin? I'm the village chief."</span></p>
+                <p class="paragraph">You bow back respectfully.</p>
+                <p class="paragraph"><span class="dialogue">"Well then, you are the new stationmaster of Otowa Station."</span></p>
+                <p class="paragraph"><span class="surprise">"Wait a minute... I'm the stationmaster??"</span></p>
+            </div>
+
+            <div class="scene-break">~ ~ ~</div>
+
+            <div class="section">
+                <p class="paragraph"><span class="dialogue">"Yes, because you are the only employee here,"</span> the chief smiles kindly.</p>
+                <p class="paragraph">The job post definitely didn't mention that... You get the sneaking suspicion you've been scammed.</p>
+                <p class="paragraph"><span class="dialogue">"Regardless, thank you for being willing to take over. You city youths really have a lot of courage..."</span> the chief sighs. <span class="dialogue">"Well then, we will host a welcome dinner for you at the ryotei tonight."</span></p>
+                <p class="paragraph">She gives a deep bow, turns, and leaves.</p>
+            </div>
+
+            <div class="scene-break">~ ~ ~</div>
+
+            <div class="section">
+                <p class="paragraph">You stand alone in the stationmaster's office. Looking around, you see it's cluttered with all sorts of junk.</p>
+                <p class="paragraph">There's a thick layer of dust on the desk, with a single envelope resting on top.</p>
+            </div>
+
+            <div class="ending">. . .</div>
+
+            <div class="nav-buttons">
+                <button class="nav-btn" disabled>PREVIOUS</button>
+                <button class="nav-btn" onclick="goToPage(2)">NEXT</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page 2: Letter - Welcome -->
+    <div class="page page-letter" id="page-2">
+        <div class="letter-container">
+            <div class="letter-paper">
+                <div class="letter-title">[ The Letter ]</div>
+                <p class="letter-text">Dear whoever is reading this,</p>
+                <p class="letter-text">Welcome to Otowa!</p>
+                <p class="letter-text">As you can see, this is a tiny village that practically no one visits.</p>
+                <p class="letter-text">There is only one train that stops here every day.</p>
+                <p class="letter-text">So, the stationmaster's job is an absolute breeze!!!</p>
+                <p class="letter-signature">Best,<br>Hikaru</p>
+                <p class="letter-warning">(Do NOT turn the page)</p>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="nav-btn" onclick="goToPage(1)">PREVIOUS</button>
+                <button class="nav-btn" onclick="goToPage(3)">NEXT</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page 3: Letter - Warning -->
+    <div class="page page-letter" id="page-3">
+        <div class="letter-container">
+            <div class="letter-paper">
+                <div class="letter-center">
+                    <p class="letter-text">Seriously, do not turn the page.</p>
+                </div>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="nav-btn" onclick="goToPage(2)">PREVIOUS</button>
+                <button class="nav-btn" onclick="goToPage(4)">NEXT</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page 4: Letter - Final Warning -->
+    <div class="page page-letter" id="page-4">
+        <div class="letter-container">
+            <div class="letter-paper">
+                <div class="letter-center">
+                    <p class="letter-big">I warned you!!</p>
+                </div>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="nav-btn" onclick="goToPage(3)">PREVIOUS</button>
+                <button class="nav-btn" onclick="goToPage(5)">NEXT</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page 5: Letter - The Truth -->
+    <div class="page page-letter" id="page-5">
+        <div class="letter-container">
+            <div class="letter-paper">
+                <p class="letter-text">Alright, if you've flipped to this point, it means you've got some guts!</p>
+                <p class="letter-text">Anyway,</p>
+                <p class="letter-text">For certain reasons,</p>
+                <p class="letter-text">Your first few days here might be just a <span class="letter-highlight">little bit busy</span>.</p>
+                <p class="letter-text">Basically... you need to bring in <span class="letter-emphasis">2,000 new passengers</span> to the village within <span class="letter-emphasis">7 days</span>.</p>
+                <p class="letter-text">Otherwise, <span class="redacted">the station will be shut down forever and you will be held responsible</span></p>
+                <p class="letter-text">But as long as you survive these 7 days, you can relax forever!!</p>
+                <p class="letter-text">I know you can do it!!</p>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="nav-btn" onclick="goToPage(4)">PREVIOUS</button>
+                <button class="nav-btn" onclick="goToPage(6)">NEXT</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page 6: Letter - How To -->
+    <div class="page page-letter" id="page-6">
+        <div class="letter-container">
+            <div class="letter-paper">
+                <p class="letter-text">As for how to bring in more tourists...</p>
+                <p class="letter-text">Word has it that this train is packed with people looking to escape reality.</p>
+                <p class="letter-text">As long as our village is charming enough, they'll decide to stay.</p>
+                <p class="letter-text">So, it's up to you to show them the <span class="letter-emphasis">charm of Otowa</span>!</p>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="nav-btn" onclick="goToPage(5)">PREVIOUS</button>
+                <button class="nav-btn" onclick="goToPage(7)">NEXT</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page 7: Letter - Job Duties -->
+    <div class="page page-letter" id="page-7">
+        <div class="letter-container">
+            <div class="letter-paper">
+                <p class="job-title">Your Job Duties</p>
+                <div class="job-item">
+                    <p class="letter-text"><strong>Collect Items:</strong> Don't just sit around in the office. Take a stroll through the village and bring back some interesting things.</p>
+                </div>
+                <div class="job-item">
+                    <p class="letter-text"><strong>Station Curation:</strong> Display the items you've found on the platform and turn this place into a mini-museum!</p>
+                </div>
+                <div class="job-item">
+                    <p class="letter-text"><strong>Showcase Items:</strong> Show the right items to the passengers based on their preferences so they decide to stay.</p>
+                </div>
+                <p class="letter-goodbye">Good luck!</p>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="nav-btn" onclick="goToPage(6)">PREVIOUS</button>
+                <button class="nav-btn" onclick="goToPage(8)">NEXT</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page 8: Items Obtained -->
+    <div class="page page-items" id="page-8">
+        <div class="items-container">
+            <h2 class="items-title">You obtained these items</h2>
+            <div class="items-panel">
+            <div class="items-grid">
+                <div class="item-card">
+                    <div class="item-glow"></div>
+                    <img src="mash.png" alt="Mushrooms">
+                </div>
+                <div class="item-card">
+                    <div class="item-glow"></div>
+                    <img src="bi.png" alt="Binoculars">
+                </div>
+                <div class="item-card">
+                    <div class="item-glow"></div>
+                    <img src="sake.png" alt="Sake">
+                </div>
+                <div class="item-card">
+                    <div class="item-glow"></div>
+                    <img src="stone.png" alt="Mysterious Stone">
+                </div>
+            </div>
+            </div>
+            <div class="nav-buttons">
+                <button class="nav-btn" onclick="goToPage(7)">PREVIOUS</button>
+                <button class="nav-btn" onclick="goToPage(9)">NEXT</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page 12: Ryotei -->
+    <div class="page page-opening" id="page-ryotei">
+        <div class="container">
+            <div class="title-section" style="padding: 10vh 0 12vh;">
+                <h1 style="font-size: 3rem;">RYOTEI</h1>
+            </div>
+
+            <!-- Opening section -->
+            <div class="section" id="ryotei-intro">
+                <p class="paragraph">You arrive at the ryotei. The village chief and a cheerful, red-faced middle-aged man stand up to greet you. The table is laden with a lavish feast, along with a bottle of sake.</p>
+                <p class="paragraph"><span class="highlight">Junko:</span> <span class="dialogue">Welcome to Otowa Village, Rin. Please, enjoy this welcome banquet as a small token of our appreciation. To think a young city-dweller like yourself would be willing to come all the way out to our remote little village to take over the station...</span></p>
+                <p class="paragraph"><span class="highlight">Yuji:</span> <span class="dialogue">Haha, welcome, welcome! The name's Yuji. The chief's been talking about the new stationmaster arriving for days now. If you ever get tired from working, feel free to drop by my pub anytime!</span></p>
+                <p class="paragraph"><span class="highlight">Rin:</span> <span class="dialogue">Thank you, Chief, and thank you, Mr. Yuji. But to be honest, I'm still a bit confused. The letter Hikaru left on the desk said I have to attract 2,000 new tourists in seven days. What is that all about...?</span></p>
+                <p class="paragraph"><span class="highlight">Junko:</span> <span class="dialogue">Oh, dear... That boy, Hikaru... I knew he didn't tell you the whole truth in the job listing.</span></p>
+                <p class="paragraph"><span class="highlight">Rin:</span> <span class="dialogue">He only left me the objective in his letter. He didn't mention the reason at all.</span></p>
+                <p class="paragraph"><span class="highlight">Junko:</span> <span class="dialogue">I am truly sorry. It was wrong of us to put you in this position.</span></p>
+                <p class="paragraph"><span class="highlight">Junko:</span> <span class="dialogue">The truth is, the railway company issued an ultimatum a few days ago. If passenger traffic doesn't meet their quota within seven days, Otowa Station will be permanently shut down.</span></p>
+                <p class="paragraph"><span class="highlight">Junko:</span> <span class="dialogue">Hikaru simply couldn't accept it, which is why he came up with this awful idea to trick someone into coming here. Rin, if you feel this is too much to handle, or if you're upset with us, it's perfectly fine if you take the train back to the city tomorrow morning. We wouldn't blame you in the slightest.</span></p>
+                <p class="paragraph"><span class="highlight">Yuji:</span> <span class="dialogue">Yeah, this is our village's problem to begin with! It ain't right dragging you into this mess!</span></p>
+                <p class="paragraph"><span class="highlight">Yuji:</span> <span class="dialogue">But, if you are willing to stick around and give it a shot, don't try to shoulder the burden all by yourself.</span></p>
+                <p class="paragraph"><span class="highlight">Yuji:</span> <span class="dialogue">If you need any help, just say the word. My pub is pretty popular with the younger crowd—I can definitely help you keep some of those tourists around!</span></p>
+                <p class="paragraph"><span class="highlight">Rin:</span> <span class="dialogue">Thank you, both of you. It's alright. Now that I'm already here—and seeing how beautiful this place is—I want to give it my best shot. I look forward to working with you all for the next seven days.</span></p>
+            </div>
+
+            <!-- Branch 1: Taste the food -->
+            <div class="section branch-content" id="ryotei-branch1" style="display: none;">
+                <div class="scene-break">~ Taste the food ~</div>
+                <p class="paragraph"><span class="highlight">Jiro:</span> <span class="dialogue">Good evening. I am Jiro, the chef here.</span></p>
+                <p class="paragraph"><span class="highlight">Rin:</span> <span class="dialogue">Good evening, Chef. This mushroom dish is absolutely incredible. The flavor makes me feel as if I'm wandering through the mountains.</span></p>
+                <div class="item-obtained">
+                    <p class="item-obtained-text">You see: Mushroom Dish</p>
+                    <img src="mash.png" alt="Mushroom Dish" class="item-obtained-img">
+                </div>
+                <p class="paragraph"><span class="highlight">Jiro:</span> <span class="dialogue">I am honored to receive such high praise. The ultimate goal of this dish is to recreate the most authentic flavors from centuries ago.</span></p>
+                <p class="paragraph"><span class="highlight">Rin:</span> <span class="dialogue">Flavors from centuries ago? That's amazing. But if the train station closes down, very few people will ever get the chance to taste it...</span></p>
+                <p class="paragraph"><span class="highlight">Jiro:</span> <span class="dialogue">Its shutting down won't make much of a difference. It's not like many people come or go on a normal day anyway.</span></p>
+                <p class="paragraph"><span class="highlight">Jiro:</span> <span class="dialogue">I prefer this peaceful life. We don't need all that noise from the outside world.</span></p>
+            </div>
+
+            <!-- Branch 2: Examine the sake bottle -->
+            <div class="section branch-content" id="ryotei-branch2" style="display: none;">
+                <div class="scene-break">~ Examine the sake bottle ~</div>
+                <p class="paragraph"><span class="highlight">Rin:</span> <span class="dialogue">This bottle of "Senbonzuru" sake looks quite impressive.</span></p>
+                <div class="item-obtained">
+                    <p class="item-obtained-text">You see: Senbonzuru Sake</p>
+                    <img src="sake.png" alt="Senbonzuru Sake" class="item-obtained-img">
+                </div>
+                <p class="paragraph"><span class="highlight">Yuji:</span> <span class="dialogue">Yep, that right there is my masterpiece.</span></p>
+                <p class="paragraph"><span class="highlight">Jiro:</span> <span class="dialogue">Indeed. I heard the brewer insisted on altering the traditional recipe to cater to the tastes of the youth, adding all sorts of strange ingredients into it.</span></p>
+                <p class="paragraph"><span class="highlight">Yuji:</span> <span class="dialogue">Haha, Jiro! Even though I changed the recipe, my sake still relies on the unique mountain spring water of Otowa Village—just like your mushroom dishes! So, at the end of the day, they aren't all that different!</span></p>
+            </div>
+
+            <!-- Branch 3: Look around -->
+            <div class="section branch-content" id="ryotei-branch3" style="display: none;">
+                <div class="scene-break">~ Look around ~</div>
+                <p class="paragraph">Pinned to the wall is an old newspaper clipping. It's a report on a local specialty competition. Otowa Village swept the top two spots, which went to Yuji's Senbonzuru sake and Jiro's mushroom dish, respectively. The article notes that the judges were deeply torn, but ultimately cast their winning votes for the side that represented innovation.</p>
+            </div>
+
+            <div class="nav-buttons" id="ryotei-nav">
+                <button class="nav-btn" id="ryotei-btn1" onclick="ryoteiChoice(1)">TASTE FOOD</button>
+                <button class="nav-btn" id="ryotei-btn2" onclick="ryoteiChoice(2)">EXAMINE SAKE</button>
+                <button class="nav-btn" id="ryotei-btn3" onclick="ryoteiChoice(3)">LOOK AROUND</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page 11: Hot Spring -->
+    <div class="page page-opening" id="page-hotspring">
+        <div class="container">
+            <div class="title-section" style="padding: 10vh 0 12vh;">
+                <h1 style="font-size: 2.5rem;">HOT SPRING</h1>
+            </div>
+
+            <!-- Opening section - always visible -->
+            <div class="section" id="hotspring-intro">
+                <p class="paragraph">You arrive at the hot springs. It is already dark, and the scent of moisture hangs heavily in the air. A young girl in a kimono is cleaning the area around a stone Jizo statue.</p>
+                <p class="paragraph"><span class="highlight">Mizuki:</span> <span class="dialogue">Good evening. I'm Mizuki.</span></p>
+                <p class="paragraph"><span class="highlight">Mizuki:</span> <span class="dialogue">You... must be Miss Rin, right? I'm sorry, but the hot springs are already closed for the day...</span></p>
+            </div>
+
+            <!-- Branch 1: Talk to her -->
+            <div class="section branch-content" id="hotspring-branch1" style="display: none;">
+                <div class="scene-break">~ Talk to her ~</div>
+                <p class="paragraph"><span class="highlight">Rin:</span> <span class="dialogue">Good evening. How did you know who I was?</span></p>
+                <p class="paragraph"><span class="highlight">Mizuki:</span> <span class="dialogue">The village chief mentioned... that someone was moving here.</span></p>
+                <p class="paragraph"><span class="highlight">Mizuki:</span> <span class="dialogue">I was curious... It's been a long time since we've had an outsider in the village.</span></p>
+                <p class="paragraph"><span class="highlight">Mizuki:</span> <span class="dialogue">Oh, right, a present... Here, this is for you.</span></p>
+                <p class="paragraph"><span class="highlight">Rin:</span> <span class="dialogue">Thank you!</span></p>
+                <div class="item-obtained">
+                    <p class="item-obtained-text">Obtained Item: Amulet</p>
+                    <img src="o.png" alt="Amulet" class="item-obtained-img">
+                </div>
+                <p class="paragraph"><span class="highlight">Rin:</span> <span class="dialogue">I really appreciate the thought. Would it be alright if I displayed this at the station for the visiting tourists to see?</span></p>
+                <p class="paragraph"><span class="highlight">Mizuki:</span> <span class="dialogue">Yes, that's fine... I'm glad if it can be of some help.</span></p>
+            </div>
+
+            <!-- Branch 2: Investigate surroundings -->
+            <div class="section branch-content" id="hotspring-branch2" style="display: none;">
+                <div class="scene-break">~ Investigate surroundings ~</div>
+                <p class="paragraph"><span class="highlight">Rin:</span> <span class="dialogue">That stone is beautiful. What is it?</span></p>
+                <p class="paragraph"><span class="highlight">Mizuki:</span> <span class="dialogue">Um, it's an onsen stone...</span></p>
+                <div class="item-obtained">
+                    <p class="item-obtained-text">You see: Onsen Stone</p>
+                    <img src="stone.png" alt="Onsen Stone" class="item-obtained-img">
+                </div>
+                <p class="paragraph"><span class="highlight">Rin:</span> <span class="dialogue">An onsen stone? It's my first time seeing a stone like this.</span></p>
+                <p class="paragraph"><span class="highlight">Mizuki:</span> <span class="dialogue">Yes. Even though it's black, it reflects all the colors of the rainbow.</span></p>
+                <p class="paragraph"><span class="highlight">Mizuki:</span> <span class="dialogue">Grandpa Rintaro told us about it... That Otowa has magical stones. If you polish them carefully, they will shine...</span></p>
+                <p class="paragraph"><span class="highlight">Rin:</span> <span class="dialogue">Rintaro? He sounds like a very knowledgeable man.</span></p>
+                <p class="paragraph"><span class="highlight">Mizuki:</span> <span class="dialogue">Mmhmm. He came here from a faraway place, too...</span></p>
+            </div>
+
+            <div class="nav-buttons" id="hotspring-nav">
+                <button class="nav-btn" id="hotspring-btn1" onclick="hotspringChoice(1)">TALK TO HER</button>
+                <button class="nav-btn" id="hotspring-btn2" onclick="hotspringChoice(2)">INVESTIGATE</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page 10: Forest -->
+    <div class="page page-opening" id="page-forest">
+        <div class="container">
+            <div class="title-section" style="padding: 10vh 0 12vh;">
+                <h1 style="font-size: 3rem;">FOREST</h1>
+            </div>
+
+            <div class="section">
+                <p class="paragraph">You arrive in the forest. You see an old man carrying a massive backpack and holding a pair of binoculars.</p>
+                <div class="item-obtained">
+                    <p class="item-obtained-text">You see: Binoculars</p>
+                    <img src="bi.png" alt="Binoculars" class="item-obtained-img">
+                </div>
+            </div>
+
+            <div class="section">
+                <p class="paragraph"><span class="highlight">Rin:</span> <span class="dialogue">Um, excuse me...</span></p>
+                <p class="paragraph"><span class="highlight">???:</span> <span class="dialogue">Shh! Keep your voice down, you're going to scare the birds away!</span></p>
+                <p class="paragraph"><span class="highlight">Rin:</span> <span class="dialogue">Ah, I'm so sorry! I didn't realize...</span></p>
+                <p class="paragraph"><span class="highlight">???:</span> <span class="dialogue">Never mind. Hm? A new face? Are you new around here?</span></p>
+                <p class="paragraph"><span class="highlight">Rin:</span> <span class="dialogue">Yes, my name is Rin. I came here to work at the train station.</span></p>
+                <p class="paragraph"><span class="highlight">???:</span> <span class="dialogue">How strange... Why would a youngster like you come all the way out here...?</span></p>
+                <p class="paragraph"><span class="highlight">???:</span> <span class="dialogue">Well, whatever. Since you'll be working here, keep an eye out for me. I'm searching for a rare bird.</span></p>
+                <p class="paragraph"><span class="highlight">???:</span> <span class="dialogue">I picked up an incredibly beautiful feather the other day, but the little guy is way too cautious. I've been staking out here with my binoculars for ages, but I still haven't managed to spot it.</span></p>
+            </div>
+
+            <div class="section">
+                <p class="paragraph"><span class="highlight">Rin:</span> <span class="surprise">(A rare bird? If I could bring that feather back to put on display, it would definitely attract a lot of birdwatchers...)</span></p>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="nav-btn" onclick="goToPage(9)">RETURN TO MAP</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page Note: Journal -->
+    <div class="page page-note" id="page-note">
+        <button class="note-page-btn note-pagination left" id="note-prev" onclick="changeNotePage(-1)">&lt;</button>
+        <button class="note-page-btn note-pagination right" id="note-next" onclick="changeNotePage(1)">&gt;</button>
+        <div class="note-container">
+            <div class="note-paper">
+                <div class="note-header">Journal: Day 1</div>
+
+                <!-- Page 1: The Forest -->
+                <div class="note-page-content active" id="note-page-1">
+                    <div id="note-forest-content">
+                        <p class="note-locked">[ ? ? ? ]</p>
+                    </div>
+                </div>
+
+                <!-- Page 2: The Hot Springs -->
+                <div class="note-page-content" id="note-page-2">
+                    <div id="note-hotspring-content">
+                        <p class="note-locked">[ ? ? ? ]</p>
+                    </div>
+                </div>
+
+                <!-- Page 3: The Ryotei -->
+                <div class="note-page-content" id="note-page-3">
+                    <div id="note-ryotei-content">
+                        <p class="note-locked">[ ? ? ? ]</p>
+                    </div>
+                </div>
+
+                <!-- Page 4: Note to Self -->
+                <div class="note-page-content" id="note-page-4">
+                    <div id="note-self-content">
+                        <p class="note-locked">[ ? ? ? ]</p>
+                    </div>
+                    <div class="nav-buttons" id="next-day-btn" style="display: none; padding-top: 2em;">
+                        <button class="nav-btn next-day" onclick="goToNextDay()">NEXT DAY</button>
+                    </div>
+                </div>
+
+                <p class="note-page-indicator" id="note-indicator">Page 1 / 4</p>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="nav-btn" onclick="goToPage(9)">RETURN TO MAP</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page Tutorial -->
+    <div class="page page-tutorial" id="page-tutorial">
+        <div class="tutorial-container">
+            <div class="tutorial-paper">
+                <!-- Step 1: Welcome -->
+                <div class="tutorial-step active" id="tutorial-step-1">
+                    <div class="tutorial-title">Day 2 - The Train Arrives</div>
+                    <p class="tutorial-text">The morning sun rises over the mountains.</p>
+                    <p class="tutorial-text">You hear the distant whistle of the train approaching Otowa Station.</p>
+                    <p class="tutorial-text">Through the window, you see curious faces peering out at the village.</p>
+                    <p class="tutorial-text">It's time to show them the charm of Otowa.</p>
+                    <p class="tutorial-step-indicator">Step 1 / 8</p>
+                </div>
+
+                <!-- Step 2: Your Items -->
+                <div class="tutorial-step" id="tutorial-step-2">
+                    <div class="tutorial-title">Your Collection</div>
+                    <p class="tutorial-text">These are the items you've gathered from the village.</p>
+                    <div class="tutorial-items-grid">
+                        <div class="tutorial-item">
+                            <img src="bi.png" alt="Binoculars">
+                        </div>
+                        <div class="tutorial-item">
+                            <img src="sake.png" alt="Sake">
+                        </div>
+                        <div class="tutorial-item">
+                            <img src="o.png" alt="Omamori">
+                        </div>
+                        <div class="tutorial-item">
+                            <img src="mash.png" alt="Mushroom">
+                        </div>
+                        <div class="tutorial-item">
+                            <img src="stone.png" alt="Stone">
+                        </div>
+                    </div>
+                    <p class="tutorial-text">Each one represents something special about Otowa Village.</p>
+                    <p class="tutorial-step-indicator">Step 2 / 8</p>
+                </div>
+
+                <!-- Step 3: Hidden Labels -->
+                <div class="tutorial-step" id="tutorial-step-3">
+                    <div class="tutorial-title">Hidden Labels</div>
+                    <p class="tutorial-text">Each item has <strong>3 hidden labels</strong>.</p>
+                    <div class="tutorial-featured">
+                        <img src="stone.png" alt="Stone">
+                        <div class="tutorial-featured-name">Onsen Stone</div>
+                    </div>
+                    <div class="tutorial-label-container" id="tutorial-labels-reveal">
+                        <span class="tutorial-label hidden" id="label-reveal-1">???</span>
+                        <span class="tutorial-label hidden" id="label-reveal-2">???</span>
+                        <span class="tutorial-label hidden" id="label-reveal-3">???</span>
+                    </div>
+                    <p class="tutorial-text">These labels describe the item's connection to the village - places, people, or qualities.</p>
+                    <p class="tutorial-text" id="reveal-hint">(Click "Continue" to reveal the labels)</p>
+                    <p class="tutorial-step-indicator">Step 3 / 8</p>
+                </div>
+
+                <!-- Step 4: The Label Pool -->
+                <div class="tutorial-step" id="tutorial-step-4">
+                    <div class="tutorial-title">Your Label Pool</div>
+                    <p class="tutorial-text">You have a pool of labels to work with.</p>
+                    <div class="tutorial-pool">
+                        <div class="tutorial-pool-title">LABEL POOL</div>
+                        <div class="tutorial-label-container">
+                            <span class="tutorial-label">Forest</span>
+                            <span class="tutorial-label">Pub</span>
+                            <span class="tutorial-label">Hot spring</span>
+                            <span class="tutorial-label">Bird watching</span>
+                            <span class="tutorial-label">Ryotei</span>
+                            <span class="tutorial-label">Mizuki</span>
+                            <span class="tutorial-label">Yuji</span>
+                        </div>
+                    </div>
+                    <p class="tutorial-text">Every label here belongs to one of your items - <strong>no distractions</strong>.</p>
+                    <p class="tutorial-text">But some labels must be discovered through exploration...</p>
+                    <p class="tutorial-step-indicator">Step 4 / 8</p>
+                </div>
+
+                <!-- Step 5: Drag and Drop -->
+                <div class="tutorial-step" id="tutorial-step-5">
+                    <div class="tutorial-title">Label Your Items</div>
+                    <p class="tutorial-text">You can place labels on items to mark them. Give it a try!</p>
+
+                    <div class="tutorial-drag-area">
+                        <div class="tutorial-item-with-slots" data-item="bi">
+                            <div class="tutorial-slots">
+                                <div class="tutorial-slot" data-slot="0" ondragover="dragOver(event)" ondrop="dropLabel(event)" onclick="removeLabel(event)"></div>
+                                <div class="tutorial-slot" data-slot="1" ondragover="dragOver(event)" ondrop="dropLabel(event)" onclick="removeLabel(event)"></div>
+                                <div class="tutorial-slot" data-slot="2" ondragover="dragOver(event)" ondrop="dropLabel(event)" onclick="removeLabel(event)"></div>
+                            </div>
+                            <div class="tutorial-item-small">
+                                <img src="bi.png" alt="Binoculars">
+                            </div>
+                        </div>
+                        <div class="tutorial-item-with-slots" data-item="stone">
+                            <div class="tutorial-slots">
+                                <div class="tutorial-slot" data-slot="0" ondragover="dragOver(event)" ondrop="dropLabel(event)" onclick="removeLabel(event)"></div>
+                                <div class="tutorial-slot" data-slot="1" ondragover="dragOver(event)" ondrop="dropLabel(event)" onclick="removeLabel(event)"></div>
+                                <div class="tutorial-slot" data-slot="2" ondragover="dragOver(event)" ondrop="dropLabel(event)" onclick="removeLabel(event)"></div>
+                            </div>
+                            <div class="tutorial-item-small">
+                                <img src="stone.png" alt="Stone">
+                            </div>
+                        </div>
+                        <div class="tutorial-item-with-slots" data-item="o">
+                            <div class="tutorial-slots">
+                                <div class="tutorial-slot" data-slot="0" ondragover="dragOver(event)" ondrop="dropLabel(event)" onclick="removeLabel(event)"></div>
+                                <div class="tutorial-slot" data-slot="1" ondragover="dragOver(event)" ondrop="dropLabel(event)" onclick="removeLabel(event)"></div>
+                                <div class="tutorial-slot" data-slot="2" ondragover="dragOver(event)" ondrop="dropLabel(event)" onclick="removeLabel(event)"></div>
+                            </div>
+                            <div class="tutorial-item-small">
+                                <img src="o.png" alt="Omamori">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tutorial-pool">
+                        <div class="tutorial-pool-title">LABEL POOL</div>
+                        <div class="tutorial-label-container" id="drag-label-pool">
+                            <span class="tutorial-label draggable" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" data-label="Forest">Forest</span>
+                            <span class="tutorial-label draggable" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" data-label="Hot spring">Hot spring</span>
+                            <span class="tutorial-label draggable" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" data-label="Bird watching">Bird watching</span>
+                            <span class="tutorial-label draggable" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" data-label="Mizuki">Mizuki</span>
+                            <span class="tutorial-label draggable" draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)" data-label="Rintaro">Rintaro</span>
+                        </div>
+                    </div>
+
+                    <p class="tutorial-drag-hint">(Click a label to remove it)</p>
+                    <p class="tutorial-step-indicator">Step 5 / 8</p>
+                </div>
+
+                <!-- Step 6: Passenger Request -->
+                <div class="tutorial-step" id="tutorial-step-6">
+                    <div class="tutorial-title">A Passenger Approaches</div>
+                    <div class="tutorial-passenger">
+                        <div class="tutorial-passenger-bubble">
+                            I'm looking for something related to... <strong>Hot spring</strong>?
+                        </div>
+                        <div class="tutorial-passenger-icon">&#128100;</div>
+                    </div>
+                    <p class="tutorial-text">Passengers will ask for items with specific labels.</p>
+                    <p class="tutorial-text">Your job is to figure out <strong>which item</strong> matches their request.</p>
+                    <p class="tutorial-step-indicator">Step 6 / 8</p>
+                </div>
+
+                <!-- Step 7: Make a Match (Interactive) -->
+                <div class="tutorial-step" id="tutorial-step-7">
+                    <div class="tutorial-title">Show Them What You've Got</div>
+                    <div class="tutorial-passenger">
+                        <div class="tutorial-passenger-bubble">
+                            <strong>Hot spring</strong>?
+                        </div>
+                    </div>
+                    <p class="tutorial-text">Click the item that matches "Hot spring":</p>
+                    <div class="tutorial-items-grid" id="tutorial-clickable-items">
+                        <div class="tutorial-item clickable" onclick="tutorialSelectItem('bi')">
+                            <img src="bi.png" alt="Binoculars">
+                        </div>
+                        <div class="tutorial-item clickable" onclick="tutorialSelectItem('sake')">
+                            <img src="sake.png" alt="Sake">
+                        </div>
+                        <div class="tutorial-item clickable" onclick="tutorialSelectItem('o')">
+                            <img src="o.png" alt="Omamori">
+                        </div>
+                        <div class="tutorial-item clickable" onclick="tutorialSelectItem('mash')">
+                            <img src="mash.png" alt="Mushroom">
+                        </div>
+                        <div class="tutorial-item clickable" onclick="tutorialSelectItem('stone')">
+                            <img src="stone.png" alt="Stone">
+                        </div>
+                    </div>
+                    <div class="tutorial-feedback" id="tutorial-feedback"></div>
+                    <p class="tutorial-step-indicator">Step 7 / 8</p>
+                </div>
+
+                <!-- Step 8: Success & Summary -->
+                <div class="tutorial-step" id="tutorial-step-8">
+                    <div class="tutorial-title">Success!</div>
+                    <div class="tutorial-success">
+                        <div class="tutorial-featured">
+                            <img id="success-item-img" src="stone.png" alt="Item">
+                        </div>
+                        <div class="tutorial-label-container" id="success-labels">
+                            <span class="tutorial-label fixed">Hot spring</span>
+                            <span class="tutorial-label">Mizuki</span>
+                            <span class="tutorial-label">Rintaro</span>
+                        </div>
+                        <div class="tutorial-counter">+1 Passenger</div>
+                    </div>
+                    <p class="tutorial-text">When you match correctly, the label is <strong>confirmed</strong>.</p>
+                    <p class="tutorial-text">The passenger decides to stay in Otowa!</p>
+                    <p class="tutorial-text">Now you're ready to welcome the day's visitors.</p>
+                    <p class="tutorial-step-indicator">Step 8 / 8</p>
+                </div>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="nav-btn" id="tutorial-prev-btn" onclick="tutorialPrev()" style="display: none;">Previous</button>
+                <button class="nav-btn" id="tutorial-btn" onclick="tutorialNext()">Continue</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page Day 2 Gameplay -->
+    <div class="page page-day2" id="page-day2">
+        <div class="day2-layout">
+            <!-- Left Panel: Journal -->
+            <div class="day2-journal-panel">
+                <button class="day2-journal-side-btn" id="day2-journal-prev" onclick="changeDay2JournalPage(-1)" disabled>&lt;</button>
+                <div class="day2-journal-wrapper">
+                    <div class="day2-journal-header">Journal: Day 1</div>
+                    <div class="day2-journal-content">
+                        <!-- Page 1: The Forest -->
+                        <div class="day2-journal-page active" id="day2-journal-page-1">
+                            <div class="day2-journal-section-title">The Forest</div>
+                            <p class="day2-journal-text">I accidentally scared away an old man's bird in the <strong>forest</strong> today. How embarrassing... He's been staking out the mountains searching for a <strong>"rare bird,"</strong> and his <strong>binoculars</strong> barely leave his eyes. He said this bird is incredibly cautious; I wonder if I'll ever get the chance to see it for myself.</p>
+                        </div>
+
+                        <!-- Page 2: The Hot Springs -->
+                        <div class="day2-journal-page" id="day2-journal-page-2">
+                            <div class="day2-journal-section-title">The Hot Springs</div>
+                            <p class="day2-journal-text">I went to the <strong>hot springs</strong> after dark, but unfortunately, they were already closed. I met <strong>Mizuki</strong> there, and she even gave me an <strong>amulet</strong> as a welcoming gift. According to her, it's been years since an outsider settled down in the village.</p>
+                            <p class="day2-journal-text">I saw some <strong>"onsen stones"</strong> by the water. Mizuki said they just look like ordinary black stones at first, but a very knowledgeable man named <strong>Grandpa Rintaro</strong> told everyone that if you polish them, they will reflect all the colors of the rainbow.</p>
+                        </div>
+
+                        <!-- Page 3: The Ryotei -->
+                        <div class="day2-journal-page" id="day2-journal-page-3">
+                            <div class="day2-journal-section-title">The Ryotei</div>
+                            <p class="day2-journal-text">The welcome banquet tonight was a lavish feast. Chief Junko and <strong>Mr. Yuji</strong> from the <strong>pub</strong> are both such wonderful people. They came clean about the station facing permanent closure, but their genuine kindness makes it impossible for me to just walk away and leave them in a bind.</p>
+                            <p class="day2-journal-text"><strong>Chef Jiro</strong> is a very serious man. His <strong>mushroom</strong> dish truly has a natural, traditional aroma.</p>
+                            <p class="day2-journal-text">The <strong>sake</strong> served at dinner is Mr. Yuji's pride and joy—even though Chef Jiro scoffed at it for having an "altered recipe." Mr. Yuji joked that whether it's his sake or Jiro's cooking, the core secret actually lies in Otowa Village's mountain <strong>spring</strong> water.</p>
+                            <p class="day2-journal-text">I saw an old newspaper clipping: Otowa Village swept the top two spots in a local specialty competition with the sake and the mushroom dish. The judges were deeply torn, but ultimately cast their <strong>winning votes</strong> for the side representing innovation.</p>
+                        </div>
+
+                        <!-- Page 4: Note to Self -->
+                        <div class="day2-journal-page" id="day2-journal-page-4">
+                            <div class="day2-journal-section-title">Note to Self</div>
+                            <p class="day2-journal-text">Seven days. 2,000 passengers. It sounds like an impossible mission. But maybe this village really has the magic to prove itself. Anyway, work starts tomorrow. Do your best, Rin!</p>
+                        </div>
+                    </div>
+                    <div class="day2-journal-footer">
+                        <span class="day2-journal-indicator" id="day2-journal-indicator">1 / 4</span>
+                    </div>
+                </div>
+                <button class="day2-journal-side-btn" id="day2-journal-next" onclick="changeDay2JournalPage(1)">&gt;</button>
+            </div>
+
+            <!-- Right Panel: Game UI -->
+            <div class="day2-game-panel">
+                <div class="day2-container">
+                    <!-- Header -->
+                    <div class="day2-header">
+                        <div class="day2-title">DAY 2</div>
+                    </div>
+
+                    <!-- Game Area -->
+                    <div id="day2-game-area">
+                <!-- Passenger Box -->
+                <div class="day2-passenger-box">
+                    <div id="day2-passenger-content">
+                        <div class="day2-passenger-header">
+                            <span class="day2-passenger-avatar" id="day2-passenger-avatar">🐦</span>
+                            <span class="day2-passenger-number">Passenger <span id="day2-passenger-num">1</span> / 8</span>
+                        </div>
+                        <div class="day2-dialogue" id="day2-dialogue">
+                            Hello, Stationmaster. I am a bird enthusiast. If I can see rare birds here, I would love to stay for a few days.
+                        </div>
+                        <div class="day2-request">
+                            Looking for: <span class="day2-request-label" id="day2-request-label">Bird watching</span>
+                        </div>
+                    </div>
+                    <div class="day2-feedback" id="day2-feedback"></div>
+                </div>
+
+                <!-- Items Section -->
+                <div class="day2-items-section">
+                    <div class="day2-items-title">YOUR ITEMS (Click to present)</div>
+                    <div class="day2-items-grid">
+                        <!-- Binoculars -->
+                        <div class="day2-item-card">
+                            <div class="day2-item-slots" data-item="bi">
+                                <div class="day2-slot" data-slot="0" ondragover="day2DragOver(event)" ondragleave="day2DragLeave(event)" ondrop="day2Drop(event)" onclick="day2RemoveLabel(event)"></div>
+                                <div class="day2-slot" data-slot="1" ondragover="day2DragOver(event)" ondragleave="day2DragLeave(event)" ondrop="day2Drop(event)" onclick="day2RemoveLabel(event)"></div>
+                                <div class="day2-slot" data-slot="2" ondragover="day2DragOver(event)" ondragleave="day2DragLeave(event)" ondrop="day2Drop(event)" onclick="day2RemoveLabel(event)"></div>
+                            </div>
+                            <div class="day2-item-img" onclick="day2SelectItem('bi')">
+                                <img src="bi.png" alt="Binoculars">
+                            </div>
+                            <div class="day2-item-name">Binoculars</div>
+                        </div>
+
+                        <!-- Sake -->
+                        <div class="day2-item-card">
+                            <div class="day2-item-slots" data-item="sake">
+                                <div class="day2-slot" data-slot="0" ondragover="day2DragOver(event)" ondragleave="day2DragLeave(event)" ondrop="day2Drop(event)" onclick="day2RemoveLabel(event)"></div>
+                                <div class="day2-slot" data-slot="1" ondragover="day2DragOver(event)" ondragleave="day2DragLeave(event)" ondrop="day2Drop(event)" onclick="day2RemoveLabel(event)"></div>
+                                <div class="day2-slot" data-slot="2" ondragover="day2DragOver(event)" ondragleave="day2DragLeave(event)" ondrop="day2Drop(event)" onclick="day2RemoveLabel(event)"></div>
+                            </div>
+                            <div class="day2-item-img" onclick="day2SelectItem('sake')">
+                                <img src="sake.png" alt="Sake">
+                            </div>
+                            <div class="day2-item-name">Sake</div>
+                        </div>
+
+                        <!-- Omamori -->
+                        <div class="day2-item-card">
+                            <div class="day2-item-slots" data-item="o">
+                                <div class="day2-slot" data-slot="0" ondragover="day2DragOver(event)" ondragleave="day2DragLeave(event)" ondrop="day2Drop(event)" onclick="day2RemoveLabel(event)"></div>
+                                <div class="day2-slot" data-slot="1" ondragover="day2DragOver(event)" ondragleave="day2DragLeave(event)" ondrop="day2Drop(event)" onclick="day2RemoveLabel(event)"></div>
+                                <div class="day2-slot" data-slot="2" ondragover="day2DragOver(event)" ondragleave="day2DragLeave(event)" ondrop="day2Drop(event)" onclick="day2RemoveLabel(event)"></div>
+                            </div>
+                            <div class="day2-item-img" onclick="day2SelectItem('o')">
+                                <img src="o.png" alt="Omamori">
+                            </div>
+                            <div class="day2-item-name">Omamori</div>
+                        </div>
+
+                        <!-- Mushroom -->
+                        <div class="day2-item-card">
+                            <div class="day2-item-slots" data-item="mash">
+                                <div class="day2-slot" data-slot="0" ondragover="day2DragOver(event)" ondragleave="day2DragLeave(event)" ondrop="day2Drop(event)" onclick="day2RemoveLabel(event)"></div>
+                                <div class="day2-slot" data-slot="1" ondragover="day2DragOver(event)" ondragleave="day2DragLeave(event)" ondrop="day2Drop(event)" onclick="day2RemoveLabel(event)"></div>
+                                <div class="day2-slot" data-slot="2" ondragover="day2DragOver(event)" ondragleave="day2DragLeave(event)" ondrop="day2Drop(event)" onclick="day2RemoveLabel(event)"></div>
+                            </div>
+                            <div class="day2-item-img" onclick="day2SelectItem('mash')">
+                                <img src="mash.png" alt="Mushroom">
+                            </div>
+                            <div class="day2-item-name">Mushroom</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Label Pool -->
+                <div class="day2-pool">
+                    <div class="day2-pool-title">LABEL POOL</div>
+                    <div class="day2-pool-labels" id="day2-label-pool">
+                        <span class="day2-label" draggable="true" ondragstart="day2DragStart(event)" ondragend="day2DragEnd(event)" data-label="Forest">Forest</span>
+                        <span class="day2-label" draggable="true" ondragstart="day2DragStart(event)" ondragend="day2DragEnd(event)" data-label="Bird watching">Bird watching</span>
+                        <span class="day2-label" draggable="true" ondragstart="day2DragStart(event)" ondragend="day2DragEnd(event)" data-label="Rintaro">Rintaro</span>
+                        <span class="day2-label" draggable="true" ondragstart="day2DragStart(event)" ondragend="day2DragEnd(event)" data-label="Pub">Pub</span>
+                        <span class="day2-label" draggable="true" ondragstart="day2DragStart(event)" ondragend="day2DragEnd(event)" data-label="Gold medal">Gold medal</span>
+                        <span class="day2-label" draggable="true" ondragstart="day2DragStart(event)" ondragend="day2DragEnd(event)" data-label="Yuji">Yuji</span>
+                        <span class="day2-label" draggable="true" ondragstart="day2DragStart(event)" ondragend="day2DragEnd(event)" data-label="Hot spring">Hot spring</span>
+                        <span class="day2-label" draggable="true" ondragstart="day2DragStart(event)" ondragend="day2DragEnd(event)" data-label="Mizuki">Mizuki</span>
+                        <span class="day2-label" draggable="true" ondragstart="day2DragStart(event)" ondragend="day2DragEnd(event)" data-label="Health">Health</span>
+                        <span class="day2-label" draggable="true" ondragstart="day2DragStart(event)" ondragend="day2DragEnd(event)" data-label="Ryotei">Ryotei</span>
+                        <span class="day2-label" draggable="true" ondragstart="day2DragStart(event)" ondragend="day2DragEnd(event)" data-label="Jiro">Jiro</span>
+                        <span class="day2-label" draggable="true" ondragstart="day2DragStart(event)" ondragend="day2DragEnd(event)" data-label="Spring">Spring</span>
+                    </div>
+                </div>
+                <div class="day2-hint">Drag labels to organize. Click an item to present it.</div>
+            </div>
+
+            <!-- Summary (hidden initially) -->
+            <div id="day2-summary" style="display: none;">
+                <div class="day2-summary">
+                    <div class="day2-summary-title">Day 2 Complete!</div>
+                    <div class="day2-summary-score" id="day2-final-score">8/8 passengers decided to stay.</div>
+                    <div class="day2-summary-text">
+                        Great work today! The village is already feeling more lively.
+                    </div>
+                </div>
+                <div class="nav-buttons">
+                    <button class="nav-btn" onclick="goToPage('thanks')">Continue</button>
+                </div>
+            </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Passenger Counter (fixed bottom right) -->
+        <div class="day2-counter-wrapper">
+            <div class="day2-counter">
+                Passengers: <span id="day2-score">0</span> / 8
+                <span class="day2-plus-one" id="day2-plus-one">+1</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Thanks Page -->
+    <div class="page page-thanks" id="page-thanks">
+        <div class="thanks-container">
+            <div class="thanks-emoji">🌿</div>
+            <h1 class="thanks-title">Thanks for Playtesting!</h1>
+            <p class="thanks-subtitle">Your feedback helps Otowa Village grow</p>
+            <p class="thanks-message">
+                This is the end of the current demo.<br>
+                More content is coming soon!
+            </p>
+            <div class="thanks-decoration">· · · ·</div>
+        </div>
+    </div>
+
+    <!-- Page 9: Map -->
+    <div class="page page-map" id="page-9">
+        <div class="map-container">
+            <h2 class="map-title">OTOWA VILLAGE</h2>
+            <p class="map-subtitle">Choose a place to explore</p>
+            <div class="map-area">
+                <button class="note-btn" onclick="goToPage('note')">Journal</button>
+                <div class="map-location loc-hotspring" onclick="visitLocation('hotspring')">Hot Spring</div>
+                <div class="map-location loc-forest" onclick="visitLocation('forest')">Forest</div>
+                <div class="map-location loc-ryotei" onclick="visitLocation('ryotei')">Ryotei</div>
+                <div class="map-location loc-pub" onclick="visitLocation('pub')">Pub</div>
+                <div class="map-location loc-playground" onclick="visitLocation('playground')">Playground</div>
+                <div class="map-location loc-station" onclick="visitLocation('station')">Station</div>
+                <div class="map-toast" id="map-toast">This location is not yet open.</div>
+            </div>
+            <div class="nav-buttons">
+                <button class="nav-btn" onclick="goToPage(8)">PREVIOUS</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Debug mode - show page nav when URL contains #debug or ?debug
+        if (window.location.hash === '#debug' || window.location.search.includes('debug')) {
+            document.querySelector('.page-nav').classList.add('debug');
+        }
+
+        // Location visit tracking
+        let forestVisited = false;
+        let hotspringVisited = false;
+        let ryoteiVisited = false;
+        let hotspringExplored = false;
+        let ryoteiExplored = false;
+
+        // Note pagination
+        let currentNotePage = 1;
+        const totalNotePages = 4;
+
+        function visitLocation(location) {
+            const closedLocations = ['station', 'pub', 'playground'];
+            if (closedLocations.includes(location)) {
+                showToast();
+                return;
+            }
+            if (location === 'forest') {
+                forestVisited = true;
+                updateNoteContent();
+                goToPage('forest');
+                return;
+            }
+            if (location === 'hotspring') {
+                hotspringVisited = true;
+                updateNoteContent();
+                if (hotspringExplored) {
+                    showHotspringExplored();
+                } else {
+                    resetHotspring();
+                }
+                goToPage('hotspring');
+                return;
+            }
+            if (location === 'ryotei') {
+                ryoteiVisited = true;
+                updateNoteContent();
+                if (ryoteiExplored) {
+                    showRyoteiExplored();
+                } else {
+                    resetRyotei();
+                }
+                goToPage('ryotei');
+                return;
+            }
+            console.log('Visiting:', location);
+        }
+
+        function showToast() {
+            const toast = document.getElementById('map-toast');
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2000);
+        }
+
+        // Hot Spring branch state
+        let hotspringBranch1Read = false;
+        let hotspringBranch2Read = false;
+
+        function resetHotspring() {
+            hotspringBranch1Read = false;
+            hotspringBranch2Read = false;
+            document.getElementById('hotspring-branch1').style.display = 'none';
+            document.getElementById('hotspring-branch2').style.display = 'none';
+            document.getElementById('hotspring-btn1').style.display = '';
+            document.getElementById('hotspring-btn2').style.display = '';
+            document.getElementById('hotspring-btn1').textContent = 'TALK TO HER';
+            document.getElementById('hotspring-btn2').textContent = 'INVESTIGATE';
+            document.getElementById('hotspring-btn1').onclick = function() { hotspringChoice(1); };
+            document.getElementById('hotspring-btn2').onclick = function() { hotspringChoice(2); };
+        }
+
+        function showHotspringExplored() {
+            document.getElementById('hotspring-branch1').style.display = 'block';
+            document.getElementById('hotspring-branch2').style.display = 'block';
+            document.getElementById('hotspring-btn1').style.display = 'none';
+            document.getElementById('hotspring-btn2').style.display = '';
+            document.getElementById('hotspring-btn2').textContent = 'RETURN TO MAP';
+            document.getElementById('hotspring-btn2').onclick = function() { goToPage(9); };
+        }
+
+        function hotspringChoice(choice) {
+            const nav = document.getElementById('hotspring-nav');
+            const branch = document.getElementById('hotspring-branch' + choice);
+
+            // Move branch before nav buttons so it appears in selection order
+            nav.parentNode.insertBefore(branch, nav);
+            branch.style.display = 'block';
+
+            if (choice === 1) hotspringBranch1Read = true;
+            else if (choice === 2) hotspringBranch2Read = true;
+
+            updateHotspringNav(choice);
+            branch.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function updateHotspringNav(justRead) {
+            const btn1 = document.getElementById('hotspring-btn1');
+            const btn2 = document.getElementById('hotspring-btn2');
+
+            if (hotspringBranch1Read && hotspringBranch2Read) {
+                // Both read - mark as explored and show return to map
+                hotspringExplored = true;
+                btn1.style.display = 'none';
+                btn2.style.display = '';
+                btn2.textContent = 'RETURN TO MAP';
+                btn2.onclick = function() { goToPage(9); };
+            } else if (justRead === 1) {
+                // Just read branch 1 - show branch 2 option
+                btn1.style.display = 'none';
+                btn2.style.display = '';
+                btn2.textContent = 'INVESTIGATE';
+                btn2.onclick = function() { hotspringChoice(2); };
+            } else if (justRead === 2) {
+                // Just read branch 2 - show branch 1 option
+                btn2.style.display = 'none';
+                btn1.style.display = '';
+                btn1.textContent = 'TALK TO HER';
+                btn1.onclick = function() { hotspringChoice(1); };
+            }
+        }
+
+        // Ryotei branch state
+        let ryoteiBranch1Read = false;
+        let ryoteiBranch2Read = false;
+        let ryoteiBranch3Read = false;
+
+        function resetRyotei() {
+            ryoteiBranch1Read = false;
+            ryoteiBranch2Read = false;
+            ryoteiBranch3Read = false;
+            document.getElementById('ryotei-branch1').style.display = 'none';
+            document.getElementById('ryotei-branch2').style.display = 'none';
+            document.getElementById('ryotei-branch3').style.display = 'none';
+            document.getElementById('ryotei-btn1').style.display = '';
+            document.getElementById('ryotei-btn2').style.display = '';
+            document.getElementById('ryotei-btn3').style.display = '';
+            document.getElementById('ryotei-btn1').textContent = 'TASTE FOOD';
+            document.getElementById('ryotei-btn2').textContent = 'EXAMINE SAKE';
+            document.getElementById('ryotei-btn3').textContent = 'LOOK AROUND';
+            document.getElementById('ryotei-btn1').onclick = function() { ryoteiChoice(1); };
+            document.getElementById('ryotei-btn2').onclick = function() { ryoteiChoice(2); };
+            document.getElementById('ryotei-btn3').onclick = function() { ryoteiChoice(3); };
+        }
+
+        function showRyoteiExplored() {
+            document.getElementById('ryotei-branch1').style.display = 'block';
+            document.getElementById('ryotei-branch2').style.display = 'block';
+            document.getElementById('ryotei-branch3').style.display = 'block';
+            document.getElementById('ryotei-btn1').style.display = 'none';
+            document.getElementById('ryotei-btn2').style.display = 'none';
+            document.getElementById('ryotei-btn3').style.display = '';
+            document.getElementById('ryotei-btn3').textContent = 'RETURN TO MAP';
+            document.getElementById('ryotei-btn3').onclick = function() { goToPage(9); };
+        }
+
+        function ryoteiChoice(choice) {
+            const nav = document.getElementById('ryotei-nav');
+            const branch = document.getElementById('ryotei-branch' + choice);
+
+            // Move branch before nav buttons so it appears in selection order
+            nav.parentNode.insertBefore(branch, nav);
+            branch.style.display = 'block';
+
+            if (choice === 1) ryoteiBranch1Read = true;
+            else if (choice === 2) ryoteiBranch2Read = true;
+            else if (choice === 3) ryoteiBranch3Read = true;
+
+            branch.scrollIntoView({ behavior: 'smooth' });
+            updateRyoteiNav();
+        }
+
+        function updateRyoteiNav() {
+            const btn1 = document.getElementById('ryotei-btn1');
+            const btn2 = document.getElementById('ryotei-btn2');
+            const btn3 = document.getElementById('ryotei-btn3');
+
+            // Hide buttons for branches already read
+            btn1.style.display = ryoteiBranch1Read ? 'none' : '';
+            btn2.style.display = ryoteiBranch2Read ? 'none' : '';
+            btn3.style.display = ryoteiBranch3Read ? 'none' : '';
+
+            // If all read, mark as explored and show return to map
+            if (ryoteiBranch1Read && ryoteiBranch2Read && ryoteiBranch3Read) {
+                ryoteiExplored = true;
+                btn1.style.display = 'none';
+                btn2.style.display = 'none';
+                btn3.style.display = '';
+                btn3.textContent = 'RETURN TO MAP';
+                btn3.onclick = function() { goToPage(9); };
+            }
+        }
+
+        // Note content
+        const noteContents = {
+            forest: `<div class="note-section-title">The Forest</div>
+                <p class="note-text">I accidentally scared away an old man's bird in the forest today. How embarrassing... He's been staking out the mountains searching for a "rare bird," and his binoculars barely leave his eyes. He said this bird is incredibly cautious; I wonder if I'll ever get the chance to see it for myself.</p>`,
+            hotspring: `<div class="note-section-title">The Hot Springs</div>
+                <p class="note-text">I went to the hot springs after dark, but unfortunately, they were already closed. I met Mizuki there, and she even gave me an amulet as a welcoming gift. According to her, it's been years since an outsider settled down in the village.</p>
+                <p class="note-text">I saw some "onsen stones" by the water. Mizuki said they just look like ordinary black stones at first, but a very knowledgeable man named Grandpa Rintaro told everyone that if you polish them, they will reflect all the colors of the rainbow.</p>`,
+            ryotei: `<div class="note-section-title">The Ryotei</div>
+                <p class="note-text">The welcome banquet tonight was a lavish feast. Chief Junko and Mr. Yuji from the pub are both such wonderful people. They came clean about the station facing permanent closure, but their genuine kindness makes it impossible for me to just walk away and leave them in a bind.</p>
+                <p class="note-text">Chef Jiro is a very serious man. His mushroom dish truly has a natural, traditional aroma.</p>
+                <p class="note-text">The sake served at dinner is Mr. Yuji's pride and joy—even though Chef Jiro scoffed at it for having an "altered recipe." Mr. Yuji joked that whether it's his sake or Jiro's cooking, the core secret actually lies in Otowa Village's mountain spring water.</p>
+                <p class="note-text">I saw an old newspaper clipping: Otowa Village swept the top two spots in a local specialty competition with the sake and the mushroom dish. The judges were deeply torn, but ultimately cast their winning votes for the side representing innovation.</p>`,
+            self: `<div class="note-section-title">Note to Self</div>
+                <p class="note-text">Seven days. 2,000 passengers. It sounds like an impossible mission. But maybe this village really has the magic to prove itself. Anyway, work starts tomorrow. Do your best, Rin!</p>`
+        };
+
+        function updateNoteContent() {
+            // Forest
+            if (forestVisited) {
+                document.getElementById('note-forest-content').innerHTML = noteContents.forest;
+            }
+            // Hot Spring
+            if (hotspringVisited) {
+                document.getElementById('note-hotspring-content').innerHTML = noteContents.hotspring;
+            }
+            // Ryotei
+            if (ryoteiVisited) {
+                document.getElementById('note-ryotei-content').innerHTML = noteContents.ryotei;
+            }
+            // Note to Self - only when all visited
+            if (forestVisited && hotspringVisited && ryoteiVisited) {
+                document.getElementById('note-self-content').innerHTML = noteContents.self;
+                // Make journal button blink
+                document.querySelector('.note-btn').classList.add('blink');
+                // Show next day button
+                document.getElementById('next-day-btn').style.display = 'flex';
+            }
+        }
+
+        function goToNextDay() {
+            goToPage('tutorial');
+        }
+
+        // Day 2 Journal pagination
+        let currentDay2JournalPage = 1;
+        const totalDay2JournalPages = 4;
+
+        function changeDay2JournalPage(delta) {
+            const newPage = currentDay2JournalPage + delta;
+            if (newPage < 1 || newPage > totalDay2JournalPages) return;
+
+            document.getElementById('day2-journal-page-' + currentDay2JournalPage).classList.remove('active');
+            currentDay2JournalPage = newPage;
+            document.getElementById('day2-journal-page-' + currentDay2JournalPage).classList.add('active');
+
+            // Update navigation buttons
+            document.getElementById('day2-journal-prev').disabled = currentDay2JournalPage === 1;
+            document.getElementById('day2-journal-next').disabled = currentDay2JournalPage === totalDay2JournalPages;
+
+            // Update indicator
+            document.getElementById('day2-journal-indicator').textContent = currentDay2JournalPage + ' / ' + totalDay2JournalPages;
+        }
+
+        // Tutorial system
+        let currentTutorialStep = 1;
+        const totalTutorialSteps = 8;
+        let tutorialItemSelected = false;
+        let tutorialSelectedItemId = null;
+        let draggedLabel = null;
+
+        function updateTutorialNav() {
+            const prevBtn = document.getElementById('tutorial-prev-btn');
+            const nextBtn = document.getElementById('tutorial-btn');
+
+            // Show/hide previous button
+            prevBtn.style.display = currentTutorialStep === 1 ? 'none' : '';
+
+            // Update next button text on last step
+            if (currentTutorialStep === totalTutorialSteps) {
+                nextBtn.textContent = 'Begin Day 2';
+            } else {
+                nextBtn.textContent = 'Continue';
+            }
+        }
+
+        function tutorialPrev() {
+            if (currentTutorialStep > 1) {
+                document.getElementById('tutorial-step-' + currentTutorialStep).classList.remove('active');
+                currentTutorialStep--;
+                document.getElementById('tutorial-step-' + currentTutorialStep).classList.add('active');
+                updateTutorialNav();
+            }
+        }
+
+        function tutorialNext() {
+            // Special handling for step 3 - reveal labels first
+            if (currentTutorialStep === 3) {
+                const labels = ['Hot spring', 'Mizuki', 'Rintaro'];
+                const label1 = document.getElementById('label-reveal-1');
+                const label2 = document.getElementById('label-reveal-2');
+                const label3 = document.getElementById('label-reveal-3');
+                const hint = document.getElementById('reveal-hint');
+
+                if (label1.classList.contains('hidden')) {
+                    // First click - reveal labels one by one
+                    hint.textContent = '';
+
+                    setTimeout(() => {
+                        label1.textContent = labels[0];
+                        label1.classList.remove('hidden');
+                        label1.classList.add('revealed');
+                    }, 0);
+
+                    setTimeout(() => {
+                        label2.textContent = labels[1];
+                        label2.classList.remove('hidden');
+                        label2.classList.add('revealed');
+                    }, 400);
+
+                    setTimeout(() => {
+                        label3.textContent = labels[2];
+                        label3.classList.remove('hidden');
+                        label3.classList.add('revealed');
+                    }, 800);
+
+                    return; // Don't advance step yet
+                }
+            }
+
+            // Special handling for step 7 - require correct selection
+            if (currentTutorialStep === 7 && !tutorialItemSelected) {
+                document.getElementById('tutorial-feedback').textContent = 'Please select an item first.';
+                return;
+            }
+
+            // Advance to next step
+            if (currentTutorialStep < totalTutorialSteps) {
+                document.getElementById('tutorial-step-' + currentTutorialStep).classList.remove('active');
+                currentTutorialStep++;
+
+                // Update step 8 content based on selected item
+                if (currentTutorialStep === 8) {
+                    updateSuccessPage();
+                }
+
+                document.getElementById('tutorial-step-' + currentTutorialStep).classList.add('active');
+                updateTutorialNav();
+            } else {
+                // Tutorial complete - start Day 2
+                startDay2();
+            }
+        }
+
+        function tutorialSelectItem(itemId) {
+            const correctAnswers = ['stone', 'o']; // Both Stone and Omamori have "Hot spring" label
+            const feedback = document.getElementById('tutorial-feedback');
+            const items = document.querySelectorAll('#tutorial-clickable-items .tutorial-item');
+
+            // Remove previous states
+            items.forEach(item => {
+                item.classList.remove('wrong', 'selected');
+            });
+
+            const clickedItem = event.currentTarget;
+
+            if (correctAnswers.includes(itemId)) {
+                // Correct!
+                clickedItem.classList.add('selected');
+                if (itemId === 'stone') {
+                    feedback.textContent = 'Correct! The onsen stone is connected to the Hot spring.';
+                } else {
+                    feedback.textContent = 'Correct! The amulet is connected to the Hot spring.';
+                }
+                feedback.classList.add('success');
+                tutorialItemSelected = true;
+                tutorialSelectedItemId = itemId;
+
+                // Disable further clicks
+                items.forEach(item => {
+                    item.classList.remove('clickable');
+                    item.onclick = null;
+                });
+            } else {
+                // Wrong answer
+                clickedItem.classList.add('wrong');
+                feedback.textContent = 'Not quite... Think about which items are related to the hot spring.';
+                feedback.classList.remove('success');
+
+                // Remove wrong class after animation
+                setTimeout(() => {
+                    clickedItem.classList.remove('wrong');
+                }, 500);
+            }
+        }
+
+        function updateSuccessPage() {
+            const img = document.getElementById('success-item-img');
+            const labelsContainer = document.getElementById('success-labels');
+
+            if (tutorialSelectedItemId === 'stone') {
+                img.src = 'stone.png';
+                img.alt = 'Stone';
+                labelsContainer.innerHTML = `
+                    <span class="tutorial-label fixed">Hot spring</span>
+                    <span class="tutorial-label">Mizuki</span>
+                    <span class="tutorial-label">Rintaro</span>
+                `;
+            } else if (tutorialSelectedItemId === 'o') {
+                img.src = 'o.png';
+                img.alt = 'Omamori';
+                labelsContainer.innerHTML = `
+                    <span class="tutorial-label fixed">Hot spring</span>
+                    <span class="tutorial-label hidden">???</span>
+                    <span class="tutorial-label hidden">???</span>
+                `;
+            }
+        }
+
+        function resetTutorial() {
+            currentTutorialStep = 1;
+            tutorialItemSelected = false;
+            tutorialSelectedItemId = null;
+
+            // Hide all steps, show first
+            for (let i = 1; i <= totalTutorialSteps; i++) {
+                document.getElementById('tutorial-step-' + i).classList.remove('active');
+            }
+            document.getElementById('tutorial-step-1').classList.add('active');
+
+            // Reset buttons
+            document.getElementById('tutorial-btn').textContent = 'Continue';
+            document.getElementById('tutorial-prev-btn').style.display = 'none';
+
+            // Reset step 3 labels
+            const label1 = document.getElementById('label-reveal-1');
+            const label2 = document.getElementById('label-reveal-2');
+            const label3 = document.getElementById('label-reveal-3');
+            const hint = document.getElementById('reveal-hint');
+
+            label1.textContent = '???';
+            label1.classList.add('hidden');
+            label1.classList.remove('revealed');
+            label2.textContent = '???';
+            label2.classList.add('hidden');
+            label2.classList.remove('revealed');
+            label3.textContent = '???';
+            label3.classList.add('hidden');
+            label3.classList.remove('revealed');
+            hint.textContent = '(Click "Continue" to reveal the labels)';
+
+            // Reset step 6 items
+            const items = document.querySelectorAll('#tutorial-clickable-items .tutorial-item');
+            items.forEach((item, index) => {
+                item.classList.remove('selected', 'wrong');
+                item.classList.add('clickable');
+                const itemIds = ['bi', 'sake', 'o', 'mash', 'stone'];
+                item.onclick = function() { tutorialSelectItem(itemIds[index]); };
+            });
+
+            // Reset feedback
+            const feedback = document.getElementById('tutorial-feedback');
+            feedback.textContent = '';
+            feedback.classList.remove('success');
+
+            // Reset drag and drop step
+            resetDragDropStep();
+        }
+
+        // Drag and Drop functions
+        function dragStart(event) {
+            draggedLabel = event.target;
+            event.target.classList.add('dragging');
+            event.dataTransfer.setData('text/plain', event.target.dataset.label);
+            event.dataTransfer.effectAllowed = 'move';
+        }
+
+        function dragEnd(event) {
+            event.target.classList.remove('dragging');
+            // Remove drag-over from all slots
+            document.querySelectorAll('.tutorial-slot').forEach(slot => {
+                slot.classList.remove('drag-over');
+            });
+        }
+
+        function dragOver(event) {
+            event.preventDefault();
+            const slot = event.target.closest('.tutorial-slot');
+            if (slot && !slot.classList.contains('filled')) {
+                slot.classList.add('drag-over');
+            }
+        }
+
+        function dropLabel(event) {
+            event.preventDefault();
+            const slot = event.target.closest('.tutorial-slot');
+            if (!slot || slot.classList.contains('filled')) return;
+
+            slot.classList.remove('drag-over');
+
+            const labelText = event.dataTransfer.getData('text/plain');
+            if (!labelText) return;
+
+            // Fill the slot
+            slot.classList.add('filled');
+            slot.innerHTML = `<span class="tutorial-slot-label">${labelText}</span>`;
+            slot.dataset.labelText = labelText;
+
+            // Hide the label in the pool
+            if (draggedLabel) {
+                draggedLabel.classList.add('in-slot');
+            }
+        }
+
+        function removeLabel(event) {
+            const slot = event.target.closest('.tutorial-slot');
+            if (!slot || !slot.classList.contains('filled')) return;
+
+            const labelText = slot.dataset.labelText;
+
+            // Clear the slot
+            slot.classList.remove('filled');
+            slot.innerHTML = '';
+            slot.dataset.labelText = '';
+
+            // Show the label back in the pool
+            const poolLabels = document.querySelectorAll('#drag-label-pool .tutorial-label');
+            poolLabels.forEach(label => {
+                if (label.dataset.label === labelText) {
+                    label.classList.remove('in-slot');
+                }
+            });
+        }
+
+        function resetDragDropStep() {
+            // Reset all slots
+            document.querySelectorAll('.tutorial-drag-area .tutorial-slot').forEach(slot => {
+                slot.classList.remove('filled', 'drag-over');
+                slot.innerHTML = '';
+                slot.dataset.labelText = '';
+            });
+
+            // Show all labels in pool
+            document.querySelectorAll('#drag-label-pool .tutorial-label').forEach(label => {
+                label.classList.remove('in-slot', 'dragging');
+            });
+        }
+
+        // ==================== DAY 2 GAMEPLAY ====================
+
+        const day2Passengers = [
+            {
+                emoji: '🐦',
+                label: 'Bird watching',
+                answer: 'bi',
+                dialogue: 'Hello, Stationmaster. I am a bird enthusiast. If I can see rare birds here, I would love to stay for a few days.'
+            },
+            {
+                emoji: '🦊',
+                label: 'Gold medal',
+                answer: 'sake',
+                dialogue: 'Hello, I heard there is an amazing local specialty that won a gold medal. As a connoisseur, I absolutely must try it!'
+            },
+            {
+                emoji: '🐰',
+                label: 'Health',
+                answer: 'o',
+                dialogue: "I've heard that living here brings health and longevity. Is that true?"
+            },
+            {
+                emoji: '🐻',
+                label: 'Hot spring',
+                answer: 'o',
+                dialogue: "Work has been so exhausting lately. I'd love nothing more than a good soak in a hot spring. An authentic, open-air bath would be the absolute best!"
+            },
+            {
+                emoji: '🐱',
+                label: 'Pub',
+                answer: 'sake',
+                dialogue: "Hello! After such a long train ride, I'd really love to find a lively spot to grab a drink and unwind. Is there anything in the village that might catch my interest?"
+            },
+            {
+                emoji: '🦌',
+                label: 'Spring',
+                answer: 'mash',
+                dialogue: 'Hello. I heard some local specialties here use the mountain spring. Do you have anything that showcases this?'
+            },
+            {
+                emoji: '🐶',
+                label: 'Jiro',
+                answer: 'mash',
+                dialogue: "I've heard there is a master named Jiro here who strictly preserves traditional techniques from centuries ago. I would very much like to interview him."
+            },
+            {
+                emoji: '🦉',
+                label: 'Rintaro',
+                answer: 'bi',
+                dialogue: 'Excuse me, Stationmaster. I am looking for a retired scholar named Rintaro. Do you have anything that might belong to him?'
+            }
+        ];
+
+        let day2State = {
+            currentPassenger: 0,
+            score: 0,
+            attempts: 0,
+            fixedLabels: {}, // { itemId: [label1, label2, ...] }
+            draggedLabel: null,
+            gameEnded: false,
+            clickCooldown: false
+        };
+
+        function startDay2() {
+            // Reset state
+            day2State = {
+                currentPassenger: 0,
+                score: 0,
+                attempts: 0,
+                fixedLabels: {},
+                draggedLabel: null,
+                gameEnded: false,
+                clickCooldown: false
+            };
+
+            // Reset UI
+            document.getElementById('day2-score').textContent = '0';
+            document.getElementById('day2-game-area').style.display = 'block';
+            document.getElementById('day2-summary').style.display = 'none';
+            document.getElementById('day2-feedback').textContent = '';
+            document.getElementById('day2-feedback').className = 'day2-feedback';
+
+            // Reset all slots
+            document.querySelectorAll('.day2-slot').forEach(slot => {
+                slot.classList.remove('filled', 'fixed', 'drag-over');
+                slot.innerHTML = '';
+                slot.dataset.labelText = '';
+            });
+
+            // Reset all labels in pool
+            document.querySelectorAll('#day2-label-pool .day2-label').forEach(label => {
+                label.classList.remove('in-slot', 'fixed', 'dragging');
+            });
+
+            // Show first passenger
+            showPassenger(0);
+
+            // Navigate to day2 page
+            goToPage('day2');
+        }
+
+        function showPassenger(index) {
+            if (index >= day2Passengers.length) {
+                endDay2();
+                return;
+            }
+
+            const passenger = day2Passengers[index];
+            document.getElementById('day2-passenger-avatar').textContent = passenger.emoji;
+            document.getElementById('day2-passenger-num').textContent = index + 1;
+            document.getElementById('day2-dialogue').textContent = passenger.dialogue;
+            document.getElementById('day2-request-label').textContent = passenger.label;
+            day2State.attempts = 0;
+
+            // Reset feedback and show content
+            document.getElementById('day2-feedback').textContent = '';
+            document.getElementById('day2-feedback').className = 'day2-feedback';
+            document.getElementById('day2-passenger-content').classList.remove('hidden');
+        }
+
+        function showPlusOneAnimation() {
+            const plusOne = document.getElementById('day2-plus-one');
+            // Reset animation
+            plusOne.classList.remove('animate');
+            // Trigger reflow to restart animation
+            void plusOne.offsetWidth;
+            // Start animation
+            plusOne.classList.add('animate');
+        }
+
+        function day2SelectItem(itemId) {
+            if (day2State.gameEnded) return;
+            if (day2State.clickCooldown) return;
+
+            // Set cooldown
+            day2State.clickCooldown = true;
+            setTimeout(() => {
+                day2State.clickCooldown = false;
+            }, 1000);
+
+            const passenger = day2Passengers[day2State.currentPassenger];
+            const feedback = document.getElementById('day2-feedback');
+            const content = document.getElementById('day2-passenger-content');
+
+            if (itemId === passenger.answer) {
+                // Correct! - Show feedback in passenger box
+                content.classList.add('hidden');
+                feedback.textContent = 'The passenger is delighted and decides to stay!';
+                feedback.className = 'day2-feedback success show';
+                day2State.score++;
+                document.getElementById('day2-score').textContent = day2State.score;
+
+                // Trigger +1 animation
+                showPlusOneAnimation();
+
+                // Fix the label on the item
+                fixLabelOnItem(itemId, passenger.label);
+
+                // Next passenger after delay
+                setTimeout(() => {
+                    day2State.currentPassenger++;
+                    showPassenger(day2State.currentPassenger);
+                }, 1500);
+            } else {
+                // Wrong
+                day2State.attempts++;
+                if (day2State.attempts >= 2) {
+                    // Second wrong - passenger leaves
+                    content.classList.add('hidden');
+                    feedback.textContent = 'The passenger left disappointed...';
+                    feedback.className = 'day2-feedback error show';
+                    setTimeout(() => {
+                        day2State.currentPassenger++;
+                        showPassenger(day2State.currentPassenger);
+                    }, 1500);
+                } else {
+                    // First wrong - try again (keep content visible)
+                    content.classList.add('hidden');
+                    feedback.textContent = 'Not quite... Try again!';
+                    feedback.className = 'day2-feedback error show';
+                    // Show content again after brief moment
+                    setTimeout(() => {
+                        feedback.className = 'day2-feedback';
+                        content.classList.remove('hidden');
+                    }, 1000);
+                }
+            }
+        }
+
+        function fixLabelOnItem(itemId, label) {
+            // First, remove this label from any OTHER item it might be on
+            document.querySelectorAll('.day2-item-slots').forEach(itemSlots => {
+                const otherItemId = itemSlots.dataset.item;
+                if (otherItemId !== itemId) {
+                    itemSlots.querySelectorAll('.day2-slot').forEach(slot => {
+                        if (slot.dataset.labelText === label) {
+                            // Remove the label from this wrong slot
+                            slot.classList.remove('filled', 'fixed');
+                            slot.innerHTML = '';
+                            slot.dataset.labelText = '';
+                        }
+                    });
+                }
+            });
+
+            // Find an empty slot on the correct item and fix the label
+            const slots = document.querySelectorAll(`.day2-item-slots[data-item="${itemId}"] .day2-slot`);
+            let slotToFix = null;
+
+            // First check if label is already in a slot on this item
+            slots.forEach(slot => {
+                if (slot.dataset.labelText === label) {
+                    slotToFix = slot;
+                }
+            });
+
+            // If not, find empty slot
+            if (!slotToFix) {
+                slots.forEach(slot => {
+                    if (!slotToFix && !slot.classList.contains('filled') && !slot.classList.contains('fixed')) {
+                        slotToFix = slot;
+                    }
+                });
+            }
+
+            if (slotToFix) {
+                slotToFix.classList.remove('filled');
+                slotToFix.classList.add('fixed');
+                slotToFix.innerHTML = `<span class="day2-slot-text">${label}</span>`;
+                slotToFix.dataset.labelText = label;
+            }
+
+            // Hide label from pool
+            document.querySelectorAll('#day2-label-pool .day2-label').forEach(labelEl => {
+                if (labelEl.dataset.label === label) {
+                    labelEl.classList.add('fixed');
+                }
+            });
+
+            // Track fixed labels
+            if (!day2State.fixedLabels[itemId]) {
+                day2State.fixedLabels[itemId] = [];
+            }
+            if (!day2State.fixedLabels[itemId].includes(label)) {
+                day2State.fixedLabels[itemId].push(label);
+            }
+        }
+
+        function endDay2() {
+            day2State.gameEnded = true;
+            document.getElementById('day2-game-area').style.display = 'none';
+            document.getElementById('day2-summary').style.display = 'block';
+            document.getElementById('day2-final-score').textContent =
+                `${day2State.score}/8 passengers decided to stay.`;
+        }
+
+        // Day 2 Drag and Drop
+        function day2DragStart(event) {
+            day2State.draggedLabel = event.target;
+            event.target.classList.add('dragging');
+            event.dataTransfer.setData('text/plain', event.target.dataset.label);
+            event.dataTransfer.effectAllowed = 'move';
+        }
+
+        function day2DragEnd(event) {
+            event.target.classList.remove('dragging');
+            document.querySelectorAll('.day2-slot').forEach(slot => {
+                slot.classList.remove('drag-over');
+            });
+        }
+
+        function day2DragOver(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            const slot = event.target.closest('.day2-slot');
+            if (slot && !slot.classList.contains('filled') && !slot.classList.contains('fixed')) {
+                slot.classList.add('drag-over');
+            }
+        }
+
+        function day2DragLeave(event) {
+            event.preventDefault();
+            const slot = event.target.closest('.day2-slot');
+            if (slot) {
+                slot.classList.remove('drag-over');
+            }
+        }
+
+        function day2Drop(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            const slot = event.target.closest('.day2-slot');
+            if (!slot || slot.classList.contains('filled') || slot.classList.contains('fixed')) return;
+
+            slot.classList.remove('drag-over');
+
+            const labelText = event.dataTransfer.getData('text/plain');
+            if (!labelText) return;
+
+            // Fill the slot
+            slot.classList.add('filled');
+            slot.innerHTML = `<span class="day2-slot-text">${labelText}</span>`;
+            slot.dataset.labelText = labelText;
+
+            // Hide the label in pool
+            if (day2State.draggedLabel) {
+                day2State.draggedLabel.classList.add('in-slot');
+            }
+        }
+
+        function day2RemoveLabel(event) {
+            event.stopPropagation();
+            const slot = event.target.closest('.day2-slot');
+            if (!slot || !slot.classList.contains('filled') || slot.classList.contains('fixed')) return;
+
+            const labelText = slot.dataset.labelText;
+
+            // Clear the slot
+            slot.classList.remove('filled');
+            slot.innerHTML = '';
+            slot.dataset.labelText = '';
+
+            // Show the label back in pool
+            document.querySelectorAll('#day2-label-pool .day2-label').forEach(label => {
+                if (label.dataset.label === labelText) {
+                    label.classList.remove('in-slot');
+                }
+            });
+        }
+
+        function changeNotePage(direction) {
+            const newPage = currentNotePage + direction;
+            if (newPage < 1 || newPage > totalNotePages) return;
+
+            // Hide current page
+            document.getElementById('note-page-' + currentNotePage).classList.remove('active');
+
+            // Show new page
+            currentNotePage = newPage;
+            document.getElementById('note-page-' + currentNotePage).classList.add('active');
+
+            // Update indicator
+            document.getElementById('note-indicator').textContent = 'Page ' + currentNotePage + ' / ' + totalNotePages;
+
+            // Update button states
+            document.getElementById('note-prev').disabled = currentNotePage === 1;
+            document.getElementById('note-next').disabled = currentNotePage === totalNotePages;
+        }
+
+        function resetNotePage() {
+            currentNotePage = 1;
+            for (let i = 1; i <= totalNotePages; i++) {
+                document.getElementById('note-page-' + i).classList.remove('active');
+            }
+            document.getElementById('note-page-1').classList.add('active');
+            document.getElementById('note-indicator').textContent = 'Page 1 / ' + totalNotePages;
+            document.getElementById('note-prev').disabled = true;
+            document.getElementById('note-next').disabled = false;
+        }
+
+        function goToPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(`page-${pageId}`).classList.add('active');
+
+            document.querySelectorAll('.page-nav-btn').forEach((btn, index) => {
+                if (typeof pageId === 'number') {
+                    btn.classList.toggle('active', index + 1 === pageId);
+                } else if (pageId === 'tutorial') {
+                    btn.classList.toggle('active', index === 9); // 10th button (index 9)
+                } else if (pageId === 'day2') {
+                    btn.classList.toggle('active', index === 10); // 11th button (index 10)
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+
+            // Reset note page when entering
+            if (pageId === 'note') {
+                resetNotePage();
+                // Stop blinking when journal is opened
+                document.querySelector('.note-btn').classList.remove('blink');
+            }
+
+            // Reset tutorial when entering
+            if (pageId === 'tutorial') {
+                resetTutorial();
+            }
+
+            window.scrollTo(0, 0);
+        }
+    </script>
+</body>
+</html>
