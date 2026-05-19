@@ -1744,6 +1744,199 @@
             letter-spacing: 0.5em;
             margin-top: 2em;
         }
+
+        /* Inventory System */
+        .inventory-btn {
+            width: 32px;
+            height: 32px;
+            border: 1px solid rgba(150, 150, 150, 0.5);
+            background: rgba(0, 0, 0, 0.3);
+            color: #aaa;
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-left: 8px;
+        }
+
+        .inventory-btn:hover {
+            background: rgba(100, 160, 100, 0.3);
+            border-color: #8fbc8f;
+            color: #8fbc8f;
+        }
+
+        .inventory-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 199;
+        }
+
+        .inventory-overlay.open {
+            display: block;
+        }
+
+        .inventory-panel {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 520px;
+            background: rgba(20, 30, 20, 0.98);
+            border: 1px solid #4a6a4a;
+            z-index: 200;
+            box-shadow: 0 12px 50px rgba(0, 0, 0, 0.6);
+        }
+
+        .inventory-panel.open {
+            display: block;
+        }
+
+        .inventory-header {
+            text-align: center;
+            padding: 18px;
+            border-bottom: 1px solid #3a5a3a;
+            font-size: 1.4rem;
+            letter-spacing: 0.2em;
+            color: #8fbc8f;
+        }
+
+        .inventory-content {
+            display: flex;
+        }
+
+        .inventory-grid-section {
+            flex: 1;
+            padding: 20px;
+        }
+
+        .inventory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .inventory-slot {
+            width: 68px;
+            height: 68px;
+            background: rgba(40, 60, 40, 0.3);
+            border: 1px solid #3a5a3a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: default;
+            transition: all 0.2s ease;
+        }
+
+        .inventory-slot.unlocked {
+            cursor: pointer;
+            background: rgba(60, 100, 60, 0.3);
+        }
+
+        .inventory-slot.unlocked:hover {
+            background: rgba(80, 130, 80, 0.4);
+            border-color: #8fbc8f;
+        }
+
+        .inventory-slot.active {
+            border-color: #8fbc8f;
+            box-shadow: 0 0 10px rgba(100, 160, 100, 0.4);
+        }
+
+        .inventory-slot img {
+            width: 55px;
+            height: 55px;
+            object-fit: contain;
+            opacity: 0.3;
+        }
+
+        .inventory-slot.unlocked img {
+            opacity: 1;
+        }
+
+        .inventory-slot .locked-icon {
+            color: #3a5a3a;
+            font-size: 1.4rem;
+        }
+
+        .inventory-detail {
+            width: 200px;
+            padding: 20px;
+            border-left: 1px solid #3a5a3a;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .inventory-detail-img {
+            width: 130px;
+            height: 130px;
+            background: rgba(40, 60, 40, 0.3);
+            border: 1px solid #3a5a3a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .inventory-detail-img img {
+            width: 110px;
+            height: 110px;
+            object-fit: contain;
+        }
+
+        .inventory-detail-name {
+            font-size: 1.15rem;
+            color: #a8c8a8;
+            text-align: center;
+            margin-bottom: 8px;
+            letter-spacing: 0.05em;
+        }
+
+        .inventory-detail-from {
+            font-size: 0.95rem;
+            color: #6a8a6a;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .inventory-labels {
+            width: 100%;
+        }
+
+        .inventory-label {
+            display: block;
+            width: 100%;
+            padding: 8px 12px;
+            margin-bottom: 8px;
+            background: rgba(60, 80, 60, 0.4);
+            border: 1px solid #4a6a4a;
+            border-radius: 18px;
+            font-size: 0.95rem;
+            color: #8fbc8f;
+            text-align: center;
+        }
+
+        .inventory-empty {
+            color: #5a7a5a;
+            font-style: italic;
+            text-align: center;
+            padding: 40px 20px;
+            font-size: 1rem;
+        }
+
+        .inventory-footer {
+            text-align: center;
+            padding: 15px;
+            border-top: 1px solid #3a5a3a;
+            font-size: 1rem;
+            color: #5a7a5a;
+        }
     </style>
 </head>
 <body>
@@ -1760,6 +1953,55 @@
         <button class="page-nav-btn" onclick="goToPage(9)">9</button>
         <button class="page-nav-btn" onclick="goToPage('tutorial')">10</button>
         <button class="page-nav-btn" onclick="startDay2()">11</button>
+        <button class="inventory-btn" onclick="toggleInventory()">INV</button>
+    </div>
+
+    <!-- Inventory Overlay -->
+    <div class="inventory-overlay" id="inventory-overlay" onclick="toggleInventory()"></div>
+
+    <!-- Inventory Panel -->
+    <div class="inventory-panel" id="inventory-panel">
+        <div class="inventory-header">INVENTORY</div>
+        <div class="inventory-content">
+            <div class="inventory-grid-section">
+                <div class="inventory-grid">
+                    <!-- Row 1 -->
+                    <div class="inventory-slot" id="inv-slot-0" data-item="mash" onclick="selectInventoryItem(0)">
+                        <img src="mash.png" alt="Mushroom Dish">
+                    </div>
+                    <div class="inventory-slot" id="inv-slot-1" data-item="sake" onclick="selectInventoryItem(1)">
+                        <img src="sake.png" alt="Sake">
+                    </div>
+                    <div class="inventory-slot" id="inv-slot-2" data-item="o" onclick="selectInventoryItem(2)">
+                        <img src="o.png" alt="Amulet">
+                    </div>
+                    <div class="inventory-slot" id="inv-slot-3" data-item="stone" onclick="selectInventoryItem(3)">
+                        <img src="stone.png" alt="Onsen Stone">
+                    </div>
+                    <!-- Row 2 -->
+                    <div class="inventory-slot" id="inv-slot-4" data-item="bi" onclick="selectInventoryItem(4)">
+                        <img src="bi.png" alt="Binoculars">
+                    </div>
+                    <div class="inventory-slot" id="inv-slot-5"><span class="locked-icon">?</span></div>
+                    <div class="inventory-slot" id="inv-slot-6"><span class="locked-icon">?</span></div>
+                    <div class="inventory-slot" id="inv-slot-7"><span class="locked-icon">?</span></div>
+                    <!-- Row 3 -->
+                    <div class="inventory-slot" id="inv-slot-8"><span class="locked-icon">?</span></div>
+                    <div class="inventory-slot" id="inv-slot-9"><span class="locked-icon">?</span></div>
+                    <div class="inventory-slot" id="inv-slot-10"><span class="locked-icon">?</span></div>
+                    <div class="inventory-slot" id="inv-slot-11"><span class="locked-icon">?</span></div>
+                    <!-- Row 4 -->
+                    <div class="inventory-slot" id="inv-slot-12"><span class="locked-icon">?</span></div>
+                    <div class="inventory-slot" id="inv-slot-13"><span class="locked-icon">?</span></div>
+                    <div class="inventory-slot" id="inv-slot-14"><span class="locked-icon">?</span></div>
+                    <div class="inventory-slot" id="inv-slot-15"><span class="locked-icon">?</span></div>
+                </div>
+            </div>
+            <div class="inventory-detail" id="inventory-detail">
+                <div class="inventory-empty">Hover over an item to see details</div>
+            </div>
+        </div>
+        <div class="inventory-footer"><span id="inventory-count">0</span> / 16 collected</div>
     </div>
 
     <!-- Page 1: Opening Story -->
@@ -2591,6 +2833,78 @@
         let hotspringExplored = false;
         let ryoteiExplored = false;
 
+        // Inventory system
+        let inventoryOpen = false;
+        let selectedInventorySlot = -1;
+
+        const inventoryItems = [
+            { id: 'mash', name: 'Mushroom Dish', from: 'Ryotei', labels: ['???', '???', '???'], unlocked: false },
+            { id: 'sake', name: 'Senbonzuru Sake', from: 'Ryotei', labels: ['???', '???', '???'], unlocked: false },
+            { id: 'o', name: 'Amulet', from: 'Hot Spring', labels: ['???', '???', '???'], unlocked: false },
+            { id: 'stone', name: 'Onsen Stone', from: 'Hot Spring', labels: ['???', '???', '???'], unlocked: false },
+            { id: 'bi', name: 'Binoculars', from: 'Forest', labels: ['???', '???', '???'], unlocked: false }
+        ];
+
+        function toggleInventory() {
+            inventoryOpen = !inventoryOpen;
+            document.getElementById('inventory-panel').classList.toggle('open', inventoryOpen);
+            document.getElementById('inventory-overlay').classList.toggle('open', inventoryOpen);
+            if (inventoryOpen) {
+                updateInventoryDisplay();
+            }
+        }
+
+        function updateInventoryDisplay() {
+            let unlockedCount = 0;
+            inventoryItems.forEach((item, index) => {
+                const slot = document.getElementById('inv-slot-' + index);
+                if (item.unlocked) {
+                    slot.classList.add('unlocked');
+                    unlockedCount++;
+                } else {
+                    slot.classList.remove('unlocked');
+                }
+            });
+            document.getElementById('inventory-count').textContent = unlockedCount;
+        }
+
+        function selectInventoryItem(slotIndex) {
+            if (slotIndex >= inventoryItems.length || !inventoryItems[slotIndex].unlocked) return;
+
+            // Remove active from previous
+            document.querySelectorAll('.inventory-slot').forEach(slot => slot.classList.remove('active'));
+
+            // Add active to current
+            document.getElementById('inv-slot-' + slotIndex).classList.add('active');
+            selectedInventorySlot = slotIndex;
+
+            const item = inventoryItems[slotIndex];
+            const detail = document.getElementById('inventory-detail');
+
+            let labelsHtml = item.labels.map(label =>
+                `<span class="inventory-label">${label}</span>`
+            ).join('');
+
+            detail.innerHTML = `
+                <div class="inventory-detail-img">
+                    <img src="${item.id}.png" alt="${item.name}">
+                </div>
+                <div class="inventory-detail-name">${item.name}</div>
+                <div class="inventory-detail-from">Obtained from: ${item.from}</div>
+                <div class="inventory-labels">${labelsHtml}</div>
+            `;
+        }
+
+        function unlockInventoryItem(itemId) {
+            const index = inventoryItems.findIndex(item => item.id === itemId);
+            if (index !== -1 && !inventoryItems[index].unlocked) {
+                inventoryItems[index].unlocked = true;
+                updateInventoryDisplay();
+            }
+        }
+
+        // Close inventory when clicking outside (handled by overlay onclick)
+
         // Note pagination
         let currentNotePage = 1;
         const totalNotePages = 4;
@@ -2603,6 +2917,7 @@
             }
             if (location === 'forest') {
                 forestVisited = true;
+                unlockInventoryItem('bi');
                 updateNoteContent();
                 goToPage('forest');
                 return;
@@ -2664,6 +2979,8 @@
             document.getElementById('hotspring-btn2').style.display = '';
             document.getElementById('hotspring-btn2').textContent = 'RETURN TO MAP';
             document.getElementById('hotspring-btn2').onclick = function() { goToPage(9); };
+            unlockInventoryItem('o');
+            unlockInventoryItem('stone');
         }
 
         function hotspringChoice(choice) {
@@ -2674,8 +2991,13 @@
             nav.parentNode.insertBefore(branch, nav);
             branch.style.display = 'block';
 
-            if (choice === 1) hotspringBranch1Read = true;
-            else if (choice === 2) hotspringBranch2Read = true;
+            if (choice === 1) {
+                hotspringBranch1Read = true;
+                unlockInventoryItem('o');
+            } else if (choice === 2) {
+                hotspringBranch2Read = true;
+                unlockInventoryItem('stone');
+            }
 
             updateHotspringNav(choice);
             branch.scrollIntoView({ behavior: 'smooth' });
@@ -2739,6 +3061,8 @@
             document.getElementById('ryotei-btn3').style.display = '';
             document.getElementById('ryotei-btn3').textContent = 'RETURN TO MAP';
             document.getElementById('ryotei-btn3').onclick = function() { goToPage(9); };
+            unlockInventoryItem('mash');
+            unlockInventoryItem('sake');
         }
 
         function ryoteiChoice(choice) {
@@ -2749,9 +3073,15 @@
             nav.parentNode.insertBefore(branch, nav);
             branch.style.display = 'block';
 
-            if (choice === 1) ryoteiBranch1Read = true;
-            else if (choice === 2) ryoteiBranch2Read = true;
-            else if (choice === 3) ryoteiBranch3Read = true;
+            if (choice === 1) {
+                ryoteiBranch1Read = true;
+                unlockInventoryItem('mash');
+            } else if (choice === 2) {
+                ryoteiBranch2Read = true;
+                unlockInventoryItem('sake');
+            } else if (choice === 3) {
+                ryoteiBranch3Read = true;
+            }
 
             branch.scrollIntoView({ behavior: 'smooth' });
             updateRyoteiNav();
