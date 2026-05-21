@@ -58,6 +58,57 @@ body {
     text-transform: uppercase;
 }
 
+/* Floating Sidebar Buttons */
+.floating-sidebar {
+    position: fixed;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 100;
+}
+
+.floating-btn {
+    padding: 12px 16px;
+    background: rgba(20, 40, 20, 0.9);
+    border: 1px solid #4a6a4a;
+    color: #8fbc8f;
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 0.95rem;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.floating-btn:hover {
+    background: rgba(60, 100, 60, 0.9);
+    border-color: #8fbc8f;
+    color: #c8e8c8;
+}
+
+/* Back to Map Button */
+.back-to-map-btn {
+    display: inline-block;
+    margin-top: 1.5em;
+    padding: 10px 24px;
+    background: transparent;
+    border: 1px solid #4a6a4a;
+    color: #8fbc8f;
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: 1rem;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.back-to-map-btn:hover {
+    background: rgba(100, 160, 100, 0.15);
+    border-color: #8fbc8f;
+}
+
 /* Paragraphs */
 .paragraph {
     font-size: 1.35rem;
@@ -79,6 +130,22 @@ body {
 
 .surprise {
     color: #d4a8a8;
+}
+
+/* Story Images */
+.story-images {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5em;
+    margin: 2em 0;
+}
+
+.story-img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 /* Scene breaks */
@@ -174,37 +241,43 @@ body {
 }
 
 .letter-text {
-    font-size: 1.25rem;
-    line-height: 2.2;
+    font-family: 'Caveat', cursive;
+    font-size: 1.5rem;
+    line-height: 2;
     margin-bottom: 1.5em;
     color: #3a352e;
 }
 
 .letter-signature {
+    font-family: 'Caveat', cursive;
     text-align: right;
-    font-style: italic;
+    font-style: normal;
+    font-size: 1.5rem;
     margin-top: 2em;
     color: #4a453e;
 }
 
 .letter-warning {
+    font-family: 'Caveat', cursive;
     text-align: center;
     color: #6a3a3a;
-    font-weight: 600;
+    font-weight: 700;
     margin-top: 2.5em;
-    font-size: 1.1rem;
+    font-size: 1.6rem;
 }
 
 .letter-center {
+    font-family: 'Caveat', cursive;
     text-align: center;
-    font-size: 1.4rem;
+    font-size: 1.6rem;
     padding: 3em 0;
 }
 
 .letter-big {
-    font-size: 1.6rem;
+    font-family: 'Caveat', cursive;
+    font-size: 2rem;
     color: #5a2a2a;
-    font-weight: 600;
+    font-weight: 700;
 }
 
 .letter-dots {
@@ -221,8 +294,10 @@ body {
 }
 
 .letter-emphasis {
+    font-family: 'Caveat', cursive;
     color: #4a5a3a;
-    font-weight: 600;
+    font-weight: 700;
+    font-size: 1.1em;
 }
 
 .letter-highlight {
@@ -231,8 +306,9 @@ body {
 }
 
 .job-title {
-    font-size: 1.4rem;
-    font-weight: 600;
+    font-family: 'Caveat', cursive;
+    font-size: 1.8rem;
+    font-weight: 700;
     color: #4a453e;
     margin-bottom: 1.5em;
     padding-bottom: 0.5em;
@@ -248,8 +324,9 @@ body {
 }
 
 .letter-goodbye {
+    font-family: 'Caveat', cursive;
     text-align: center;
-    font-size: 1.5rem;
+    font-size: 1.8rem;
     color: #4a5a3a;
     margin-top: 2em;
     font-weight: 600;
@@ -698,10 +775,10 @@ body {
 
 /* Page navigation (top right) */
 .page-nav {
+    display: flex;
     position: fixed;
     top: 20px;
     right: 20px;
-    display: flex;
     gap: 8px;
     z-index: 100;
 }
@@ -1790,12 +1867,35 @@ body {
 }
 
 .inventory-header {
+    position: relative;
     text-align: center;
     padding: 18px;
     border-bottom: 1px solid #3a5a3a;
     font-size: 1.4rem;
     letter-spacing: 0.2em;
     color: #8fbc8f;
+}
+
+.inventory-close-btn {
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    transform: translateY(-50%);
+    background: transparent;
+    border: 1px solid #4a6a4a;
+    color: #8fbc8f;
+    width: 28px;
+    height: 28px;
+    font-size: 1.3rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.inventory-close-btn:hover {
+    background: rgba(100, 60, 60, 0.4);
+    border-color: #8a5a5a;
+    color: #c8a8a8;
 }
 
 .inventory-content {
@@ -1825,8 +1925,13 @@ body {
     transition: all 0.2s ease;
 }
 
-.inventory-slot.unlocked {
+.inventory-slot:hover {
     cursor: pointer;
+    background: rgba(60, 90, 60, 0.4);
+    border-color: #5a8a5a;
+}
+
+.inventory-slot.unlocked {
     background: rgba(60, 100, 60, 0.3);
 }
 
@@ -1844,11 +1949,19 @@ body {
     width: 55px;
     height: 55px;
     object-fit: contain;
-    opacity: 0.3;
+    display: none;
 }
 
 .inventory-slot.unlocked img {
-    opacity: 1;
+    display: block;
+}
+
+.inventory-slot .locked-icon {
+    display: block;
+}
+
+.inventory-slot.unlocked .locked-icon {
+    display: none;
 }
 
 .inventory-slot .locked-icon {

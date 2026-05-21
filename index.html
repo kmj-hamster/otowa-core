@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Otowa</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Caveat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -29,25 +29,33 @@
 
     <!-- Inventory Panel -->
     <div class="inventory-panel" id="inventory-panel">
-        <div class="inventory-header">INVENTORY</div>
+        <div class="inventory-header">
+            INVENTORY
+            <button class="inventory-close-btn" onclick="toggleInventory()">×</button>
+        </div>
         <div class="inventory-content">
             <div class="inventory-grid-section">
                 <div class="inventory-grid">
                     <!-- Row 1 -->
-                    <div class="inventory-slot" id="inv-slot-0" data-item="mash" onclick="selectInventoryItem(0)">
-                        <img src="mash.png" alt="Mushroom Dish">
+                    <div class="inventory-slot" id="inv-slot-0" data-item="mash" onmouseenter="hoverInventoryItem(0)">
+                        <span class="locked-icon">?</span>
+                        <img src="mash.png" alt="Mushroom">
                     </div>
-                    <div class="inventory-slot" id="inv-slot-1" data-item="sake" onclick="selectInventoryItem(1)">
+                    <div class="inventory-slot" id="inv-slot-1" data-item="sake" onmouseenter="hoverInventoryItem(1)">
+                        <span class="locked-icon">?</span>
                         <img src="sake.png" alt="Sake">
                     </div>
-                    <div class="inventory-slot" id="inv-slot-2" data-item="o" onclick="selectInventoryItem(2)">
+                    <div class="inventory-slot" id="inv-slot-2" data-item="o" onmouseenter="hoverInventoryItem(2)">
+                        <span class="locked-icon">?</span>
                         <img src="o.png" alt="Amulet">
                     </div>
-                    <div class="inventory-slot" id="inv-slot-3" data-item="stone" onclick="selectInventoryItem(3)">
+                    <div class="inventory-slot" id="inv-slot-3" data-item="stone" onmouseenter="hoverInventoryItem(3)">
+                        <span class="locked-icon">?</span>
                         <img src="stone.png" alt="Onsen Stone">
                     </div>
                     <!-- Row 2 -->
-                    <div class="inventory-slot" id="inv-slot-4" data-item="bi" onclick="selectInventoryItem(4)">
+                    <div class="inventory-slot" id="inv-slot-4" data-item="bi" onmouseenter="hoverInventoryItem(4)">
+                        <span class="locked-icon">?</span>
                         <img src="bi.png" alt="Binoculars">
                     </div>
                     <div class="inventory-slot" id="inv-slot-5"><span class="locked-icon">?</span></div>
@@ -86,6 +94,7 @@
                 <p class="paragraph">You wanted to find a quiet place to completely clear your head. That's when you saw <span class="highlight">Hikaru's</span> post.</p>
                 <p class="paragraph">He was working at a train station in a small mountain village and posted a job ad online because he was leaving.</p>
                 <p class="paragraph">The attached photos hooked you. You immediately knew you wanted to go to that lush, green place.</p>
+                <p class="paragraph">You contacted Hikaru, and after a 3-minute interview, you got the job.</p>
             </div>
 
             <div class="scene-break">~ ~ ~</div>
@@ -102,6 +111,10 @@
 
             <div class="section">
                 <p class="paragraph">On the platform, an elderly woman in a black kimono bows to you.</p>
+                <div class="story-images">
+                    <img src="station.png" alt="Otowa Station" class="story-img">
+                    <img src="character.jpeg" alt="Characters" class="story-img">
+                </div>
                 <p class="paragraph"><span class="dialogue">"You must be Rin? I'm the village chief."</span></p>
                 <p class="paragraph">You bow back respectfully.</p>
                 <p class="paragraph"><span class="dialogue">"Well then, you are the new stationmaster of Otowa Station."</span></p>
@@ -251,7 +264,7 @@
     <!-- Page 8: Items Obtained -->
     <div class="page page-items" id="page-8">
         <div class="items-container">
-            <h2 class="items-title">You obtained these items</h2>
+            <h2 class="items-title">You obtained these items from the messy stationmaster's office</h2>
             <div class="items-panel">
             <div class="items-grid">
                 <div class="item-card">
@@ -273,9 +286,14 @@
 
     <!-- Page 12: Ryotei -->
     <div class="page page-opening" id="page-ryotei">
+        <div class="floating-sidebar">
+            <button class="floating-btn" onclick="goToPage('note')">Journal</button>
+            <button class="floating-btn" onclick="toggleInventory()">Inventory</button>
+        </div>
         <div class="container">
             <div class="title-section" style="padding: 10vh 0 12vh;">
                 <h1 style="font-size: 3rem;">RYOTEI</h1>
+                <button class="back-to-map-btn" onclick="goToPage(9)">← Back to Map</button>
             </div>
 
             <!-- Opening section -->
@@ -300,27 +318,30 @@
                 <div class="scene-break">~ Taste the food ~</div>
                 <p class="paragraph"><span class="highlight">Jiro:</span> <span class="dialogue">Good evening. I am Jiro, the chef here.</span></p>
                 <p class="paragraph"><span class="highlight">Rin:</span> <span class="dialogue">Good evening, Chef. This mushroom dish is absolutely incredible. The flavor makes me feel as if I'm wandering through the mountains.</span></p>
-                <div class="item-obtained">
-                    <p class="item-obtained-text">You see: Mushroom Dish</p>
-                    <img src="mash.png" alt="Mushroom Dish" class="item-obtained-img">
-                </div>
                 <p class="paragraph"><span class="highlight">Jiro:</span> <span class="dialogue">I am honored to receive such high praise. The ultimate goal of this dish is to recreate the most authentic flavors from centuries ago.</span></p>
                 <p class="paragraph"><span class="highlight">Rin:</span> <span class="dialogue">Flavors from centuries ago? That's amazing. But if the train station closes down, very few people will ever get the chance to taste it...</span></p>
                 <p class="paragraph"><span class="highlight">Jiro:</span> <span class="dialogue">Its shutting down won't make much of a difference. It's not like many people come or go on a normal day anyway.</span></p>
                 <p class="paragraph"><span class="highlight">Jiro:</span> <span class="dialogue">I prefer this peaceful life. We don't need all that noise from the outside world.</span></p>
+                <p class="paragraph"><span class="highlight">Rin:</span> <span class="dialogue">Chef Jiro, would it be alright if I took some mushrooms back to the station? I'd love to show visitors what Otowa has to offer.</span></p>
+                <p class="paragraph"><span class="highlight">Jiro:</span> <span class="dialogue">...If you insist. Take them.</span></p>
+                <div class="item-obtained">
+                    <p class="item-obtained-text">You obtain: Mushroom</p>
+                    <img src="mash.png" alt="Mushroom" class="item-obtained-img">
+                </div>
             </div>
 
             <!-- Branch 2: Examine the sake bottle -->
             <div class="section branch-content" id="ryotei-branch2" style="display: none;">
                 <div class="scene-break">~ Examine the sake bottle ~</div>
                 <p class="paragraph"><span class="highlight">Rin:</span> <span class="dialogue">This bottle of "Senbonzuru" sake looks quite impressive.</span></p>
-                <div class="item-obtained">
-                    <p class="item-obtained-text">You see: Senbonzuru Sake</p>
-                    <img src="sake.png" alt="Senbonzuru Sake" class="item-obtained-img">
-                </div>
                 <p class="paragraph"><span class="highlight">Yuji:</span> <span class="dialogue">Yep, that right there is my masterpiece.</span></p>
                 <p class="paragraph"><span class="highlight">Jiro:</span> <span class="dialogue">Indeed. I heard the brewer insisted on altering the traditional recipe to cater to the tastes of the youth, adding all sorts of strange ingredients into it.</span></p>
                 <p class="paragraph"><span class="highlight">Yuji:</span> <span class="dialogue">Haha, Jiro! Even though I changed the recipe, my sake still relies on the unique mountain spring water of Otowa Village—just like your mushroom dishes! So, at the end of the day, they aren't all that different!</span></p>
+                <p class="paragraph"><span class="highlight">Yuji:</span> <span class="dialogue">Hey Rin, why don't you take a bottle back to the station? Put it on display—let the visitors see what Otowa has to offer!</span></p>
+                <div class="item-obtained">
+                    <p class="item-obtained-text">You obtain: Senbonzuru Sake</p>
+                    <img src="sake.png" alt="Senbonzuru Sake" class="item-obtained-img">
+                </div>
             </div>
 
             <!-- Branch 3: Look around -->
@@ -339,16 +360,21 @@
 
     <!-- Page 11: Hot Spring -->
     <div class="page page-opening" id="page-hotspring">
+        <div class="floating-sidebar">
+            <button class="floating-btn" onclick="goToPage('note')">Journal</button>
+            <button class="floating-btn" onclick="toggleInventory()">Inventory</button>
+        </div>
         <div class="container">
             <div class="title-section" style="padding: 10vh 0 12vh;">
                 <h1 style="font-size: 2.5rem;">HOT SPRING</h1>
+                <button class="back-to-map-btn" onclick="goToPage(9)">← Back to Map</button>
             </div>
 
             <!-- Opening section - always visible -->
             <div class="section" id="hotspring-intro">
                 <p class="paragraph">You arrive at the hot springs. It is already dark, and the scent of moisture hangs heavily in the air. A young girl in a kimono is cleaning the area around a stone Jizo statue.</p>
                 <p class="paragraph"><span class="highlight">Mizuki:</span> <span class="dialogue">Good evening. I'm Mizuki.</span></p>
-                <p class="paragraph"><span class="highlight">Mizuki:</span> <span class="dialogue">You... must be Miss Rin, right? I'm sorry, but the hot springs are already closed for the day...</span></p>
+                <p class="paragraph"><span class="highlight">Mizuki:</span> <span class="dialogue">You... must be Rin, right? I'm sorry, but the hot springs are already closed for the day...</span></p>
             </div>
 
             <!-- Branch 1: Talk to her -->
@@ -392,9 +418,14 @@
 
     <!-- Page 10: Forest -->
     <div class="page page-opening" id="page-forest">
+        <div class="floating-sidebar">
+            <button class="floating-btn" onclick="goToPage('note')">Journal</button>
+            <button class="floating-btn" onclick="toggleInventory()">Inventory</button>
+        </div>
         <div class="container">
             <div class="title-section" style="padding: 10vh 0 12vh;">
                 <h1 style="font-size: 3rem;">FOREST</h1>
+                <button class="back-to-map-btn" onclick="goToPage(9)">← Back to Map</button>
             </div>
 
             <div class="section">
@@ -874,6 +905,7 @@
             <p class="map-subtitle">Choose a place to explore</p>
             <div class="map-area">
                 <button class="note-btn" onclick="goToPage('note')">Journal</button>
+                <button class="note-btn" style="top: 60px;" onclick="toggleInventory()">Inventory</button>
                 <div class="map-location loc-hotspring" onclick="visitLocation('hotspring')">Hot Spring</div>
                 <div class="map-location loc-forest" onclick="visitLocation('forest')">Forest</div>
                 <div class="map-location loc-ryotei" onclick="visitLocation('ryotei')">Ryotei</div>
