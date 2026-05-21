@@ -3,12 +3,13 @@ if (window.location.hash === '#debug' || window.location.search.includes('debug'
     document.querySelector('.page-nav').classList.add('debug');
 }
 
-// Location visit tracking
-let forestVisited = false;
-let hotspringVisited = false;
-let ryoteiVisited = false;
+// Location exploration tracking - set when returning via bottom RETURN TO MAP button
+let forestExplored = false;
 let hotspringExplored = false;
 let ryoteiExplored = false;
+
+// Track exploration order
+let explorationOrder = [];
 
 // Inventory system
 let inventoryOpen = false;
@@ -29,6 +30,16 @@ function toggleInventory() {
     if (inventoryOpen) {
         updateInventoryDisplay();
     }
+}
+
+function page8InventoryClick() {
+    // Stop blinking
+    const page8InvBtn = document.querySelector('.page8-inventory-btn');
+    if (page8InvBtn) {
+        page8InvBtn.classList.remove('blink');
+    }
+    // Open inventory
+    toggleInventory();
 }
 
 function updateInventoryDisplay() {
@@ -110,15 +121,11 @@ function visitLocation(location) {
         return;
     }
     if (location === 'forest') {
-        forestVisited = true;
-        updateNoteContent();
         goToPage('forest');
         return;
     }
     if (location === 'hotspring') {
-        hotspringVisited = true;
-        updateNoteContent();
-        if (hotspringExplored) {
+        if (hotspringBranch1Read && hotspringBranch2Read) {
             showHotspringExplored();
         } else {
             resetHotspring();
@@ -127,9 +134,7 @@ function visitLocation(location) {
         return;
     }
     if (location === 'ryotei') {
-        ryoteiVisited = true;
-        updateNoteContent();
-        if (ryoteiExplored) {
+        if (ryoteiBranch1Read && ryoteiBranch2Read && ryoteiBranch3Read) {
             showRyoteiExplored();
         } else {
             resetRyotei();
@@ -146,6 +151,34 @@ function showToast() {
     setTimeout(() => {
         toast.classList.remove('show');
     }, 2000);
+}
+
+// Return to map via bottom button - marks location as fully explored
+function returnFromForest() {
+    if (!forestExplored) {
+        forestExplored = true;
+        explorationOrder.push('forest');
+    }
+    updateNoteContent();
+    goToPage(9);
+}
+
+function returnFromHotspring() {
+    if (!hotspringExplored) {
+        hotspringExplored = true;
+        explorationOrder.push('hotspring');
+    }
+    updateNoteContent();
+    goToPage(9);
+}
+
+function returnFromRyotei() {
+    if (!ryoteiExplored) {
+        ryoteiExplored = true;
+        explorationOrder.push('ryotei');
+    }
+    updateNoteContent();
+    goToPage(9);
 }
 
 // Hot Spring branch state
@@ -171,7 +204,7 @@ function showHotspringExplored() {
     document.getElementById('hotspring-btn1').style.display = 'none';
     document.getElementById('hotspring-btn2').style.display = '';
     document.getElementById('hotspring-btn2').textContent = 'RETURN TO MAP';
-    document.getElementById('hotspring-btn2').onclick = function() { goToPage(9); };
+    document.getElementById('hotspring-btn2').onclick = function() { returnFromHotspring(); };
     unlockInventoryItem('o');
 }
 
@@ -199,12 +232,11 @@ function updateHotspringNav(justRead) {
     const btn2 = document.getElementById('hotspring-btn2');
 
     if (hotspringBranch1Read && hotspringBranch2Read) {
-        // Both read - mark as explored and show return to map
-        hotspringExplored = true;
+        // Both read - show return to map
         btn1.style.display = 'none';
         btn2.style.display = '';
         btn2.textContent = 'RETURN TO MAP';
-        btn2.onclick = function() { goToPage(9); };
+        btn2.onclick = function() { returnFromHotspring(); };
     } else if (justRead === 1) {
         // Just read branch 1 - show branch 2 option
         btn1.style.display = 'none';
@@ -251,7 +283,7 @@ function showRyoteiExplored() {
     document.getElementById('ryotei-btn2').style.display = 'none';
     document.getElementById('ryotei-btn3').style.display = '';
     document.getElementById('ryotei-btn3').textContent = 'RETURN TO MAP';
-    document.getElementById('ryotei-btn3').onclick = function() { goToPage(9); };
+    document.getElementById('ryotei-btn3').onclick = function() { returnFromRyotei(); };
     unlockInventoryItem('mash');
     unlockInventoryItem('sake');
 }
@@ -288,14 +320,13 @@ function updateRyoteiNav() {
     btn2.style.display = ryoteiBranch2Read ? 'none' : '';
     btn3.style.display = ryoteiBranch3Read ? 'none' : '';
 
-    // If all read, mark as explored and show return to map
+    // If all read, show return to map
     if (ryoteiBranch1Read && ryoteiBranch2Read && ryoteiBranch3Read) {
-        ryoteiExplored = true;
         btn1.style.display = 'none';
         btn2.style.display = 'none';
         btn3.style.display = '';
         btn3.textContent = 'RETURN TO MAP';
-        btn3.onclick = function() { goToPage(9); };
+        btn3.onclick = function() { returnFromRyotei(); };
     }
 }
 
@@ -316,25 +347,36 @@ const noteContents = {
 };
 
 function updateNoteContent() {
-    // Forest
-    if (forestVisited) {
-        document.getElementById('note-forest-content').innerHTML = noteContents.forest;
+    // Fill pages 1-3 based on exploration order
+    for (let i = 0; i < 3; i++) {
+        const pageNum = i + 1;
+        const pageEl = document.getElementById('note-page-' + pageNum);
+
+        if (i < explorationOrder.length) {
+            const location = explorationOrder[i];
+            pageEl.innerHTML = noteContents[location];
+        } else {
+            pageEl.innerHTML = '<p class="note-locked">[ ? ? ? ]</p>';
+        }
     }
-    // Hot Spring
-    if (hotspringVisited) {
-        document.getElementById('note-hotspring-content').innerHTML = noteContents.hotspring;
-    }
-    // Ryotei
-    if (ryoteiVisited) {
-        document.getElementById('note-ryotei-content').innerHTML = noteContents.ryotei;
-    }
-    // Note to Self - only when all visited
-    if (forestVisited && hotspringVisited && ryoteiVisited) {
-        document.getElementById('note-self-content').innerHTML = noteContents.self;
+
+    // Note to Self (page 4) - only when all scenes are fully explored
+    if (forestExplored && hotspringExplored && ryoteiExplored) {
+        document.getElementById('note-page-4').innerHTML = `
+            <div id="note-self-content">${noteContents.self}</div>
+            <div class="nav-buttons" id="next-day-btn" style="display: flex; padding-top: 2em;">
+                <button class="nav-btn next-day" onclick="goToNextDay()">NEXT DAY</button>
+            </div>
+        `;
         // Make journal button blink
         document.querySelector('.note-btn').classList.add('blink');
-        // Show next day button
-        document.getElementById('next-day-btn').style.display = 'flex';
+    } else {
+        document.getElementById('note-page-4').innerHTML = `
+            <div id="note-self-content"><p class="note-locked">[ ? ? ? ]</p></div>
+            <div class="nav-buttons" id="next-day-btn" style="display: none; padding-top: 2em;">
+                <button class="nav-btn next-day" onclick="goToNextDay()">NEXT DAY</button>
+            </div>
+        `;
     }
 }
 
@@ -642,7 +684,7 @@ function resetDragDropStep() {
 
 // ==================== DAY 2 GAMEPLAY ====================
 
-const day2Passengers = [
+let day2Passengers = [
     {
         emoji: '🐦',
         label: 'Bird watching',
@@ -695,8 +737,7 @@ const day2Passengers = [
 
 let day2State = {
     currentPassenger: 0,
-    score: 0,
-    attempts: 0,
+    satisfaction: 2,  // Range 0-4, start at middle (2)
     fixedLabels: {}, // { itemId: [label1, label2, ...] }
     draggedLabel: null,
     gameEnded: false,
@@ -707,8 +748,7 @@ function startDay2() {
     // Reset state
     day2State = {
         currentPassenger: 0,
-        score: 0,
-        attempts: 0,
+        satisfaction: 2,  // Start at middle (range 0-4)
         fixedLabels: {},
         draggedLabel: null,
         gameEnded: false,
@@ -716,7 +756,6 @@ function startDay2() {
     };
 
     // Reset UI
-    document.getElementById('day2-score').textContent = '0';
     document.getElementById('day2-game-area').style.display = 'block';
     document.getElementById('day2-summary').style.display = 'none';
     document.getElementById('day2-feedback').textContent = '';
@@ -733,6 +772,9 @@ function startDay2() {
     document.querySelectorAll('#day2-label-pool .day2-label').forEach(label => {
         label.classList.remove('in-slot', 'fixed', 'dragging');
     });
+
+    // Initialize satisfaction bar
+    updateSatisfactionBar();
 
     // Show first passenger
     showPassenger(0);
@@ -752,7 +794,6 @@ function showPassenger(index) {
     document.getElementById('day2-passenger-num').textContent = index + 1;
     document.getElementById('day2-dialogue').textContent = passenger.dialogue;
     document.getElementById('day2-request-label').textContent = passenger.label;
-    day2State.attempts = 0;
 
     // Reset feedback and show content
     document.getElementById('day2-feedback').textContent = '';
@@ -760,14 +801,126 @@ function showPassenger(index) {
     document.getElementById('day2-passenger-content').classList.remove('hidden');
 }
 
-function showPlusOneAnimation() {
-    const plusOne = document.getElementById('day2-plus-one');
-    // Reset animation
-    plusOne.classList.remove('animate');
-    // Trigger reflow to restart animation
-    void plusOne.offsetWidth;
-    // Start animation
-    plusOne.classList.add('animate');
+// Satisfaction Bar Functions
+function updateSatisfactionBar() {
+    const segments = document.querySelectorAll('.sat-segment');
+    segments.forEach((segment, index) => {
+        if (index < day2State.satisfaction) {
+            segment.classList.add('filled');
+        } else {
+            segment.classList.remove('filled');
+        }
+    });
+}
+
+function animateSatisfactionChange(direction) {
+    const segments = document.querySelectorAll('.sat-segment');
+    let targetIndex;
+
+    if (direction === 'up') {
+        // Animate the segment that just got filled (current satisfaction - 1, since we already incremented)
+        targetIndex = day2State.satisfaction - 1;
+        if (targetIndex >= 0 && targetIndex < segments.length) {
+            segments[targetIndex].classList.add('pulse-up');
+            setTimeout(() => segments[targetIndex].classList.remove('pulse-up'), 400);
+        }
+    } else {
+        // Animate the segment that just got emptied (current satisfaction, since we already decremented)
+        targetIndex = day2State.satisfaction;
+        if (targetIndex >= 0 && targetIndex < segments.length) {
+            segments[targetIndex].classList.add('pulse-down');
+            setTimeout(() => segments[targetIndex].classList.remove('pulse-down'), 400);
+        }
+    }
+}
+
+function checkGameOver() {
+    if (day2State.satisfaction === 0) {
+        // Game over - show popup
+        day2State.gameEnded = true;
+        const content = document.getElementById('day2-passenger-content');
+        content.classList.add('hidden');
+
+        // Show game over popup after a brief delay
+        setTimeout(() => {
+            showGameOverPopup();
+        }, 500);
+        return true;
+    }
+    return false;
+}
+
+// Fisher-Yates shuffle algorithm
+function shuffleArray(array) {
+    const shuffled = [...array]; // Create a copy
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+}
+
+function restartDay2() {
+    // Reset state but keep on same page
+    day2State.currentPassenger = 0;
+    day2State.satisfaction = 2;
+    day2State.fixedLabels = {};
+    day2State.gameEnded = false;
+    day2State.clickCooldown = false;
+
+    // Shuffle passengers order
+    day2Passengers = shuffleArray(day2Passengers);
+
+    // Reset UI
+    document.getElementById('day2-feedback').textContent = '';
+    document.getElementById('day2-feedback').className = 'day2-feedback';
+
+    // Reset all slots
+    document.querySelectorAll('.day2-slot').forEach(slot => {
+        slot.classList.remove('filled', 'fixed', 'drag-over');
+        slot.innerHTML = '';
+        slot.dataset.labelText = '';
+    });
+
+    // Reset all labels in pool
+    document.querySelectorAll('#day2-label-pool .day2-label').forEach(label => {
+        label.classList.remove('in-slot', 'fixed', 'dragging');
+    });
+
+    // Update satisfaction bar
+    updateSatisfactionBar();
+
+    // Show first passenger
+    showPassenger(0);
+}
+
+// Success messages for correct answers
+const day2SuccessMessages = [
+    'The passenger is delighted and decides to stay!',
+    'Amazing! They want to post about Otowa on social media!',
+    'Perfect match! The passenger is very satisfied!',
+    'Wonderful! They say they\'ll tell all their friends about this place!',
+    'The passenger smiles warmly and thanks you!',
+    'Excellent! They\'re already planning a longer visit!',
+    'They\'re impressed and decide to explore the village!',
+    'Great job! The passenger can\'t wait to experience Otowa!'
+];
+
+function getRandomSuccessMessage() {
+    return day2SuccessMessages[Math.floor(Math.random() * day2SuccessMessages.length)];
+}
+
+function showGameOverPopup() {
+    document.getElementById('gameover-popup-overlay').classList.add('show');
+    document.getElementById('gameover-popup').classList.add('show');
+}
+
+function closeGameOverPopup() {
+    document.getElementById('gameover-popup-overlay').classList.remove('show');
+    document.getElementById('gameover-popup').classList.remove('show');
+
+    // Restart the game
+    restartDay2();
 }
 
 function day2SelectItem(itemId) {
@@ -787,13 +940,15 @@ function day2SelectItem(itemId) {
     if (itemId === passenger.answer) {
         // Correct! - Show feedback in passenger box
         content.classList.add('hidden');
-        feedback.textContent = 'The passenger is delighted and decides to stay!';
+        feedback.textContent = getRandomSuccessMessage();
         feedback.className = 'day2-feedback success show';
-        day2State.score++;
-        document.getElementById('day2-score').textContent = day2State.score;
 
-        // Trigger +1 animation
-        showPlusOneAnimation();
+        // Increase satisfaction (max 5)
+        if (day2State.satisfaction < 5) {
+            day2State.satisfaction++;
+            updateSatisfactionBar();
+            animateSatisfactionChange('up');
+        }
 
         // Fix the label on the item
         fixLabelOnItem(itemId, passenger.label);
@@ -804,28 +959,26 @@ function day2SelectItem(itemId) {
             showPassenger(day2State.currentPassenger);
         }, 1500);
     } else {
-        // Wrong
-        day2State.attempts++;
-        if (day2State.attempts >= 2) {
-            // Second wrong - passenger leaves
-            content.classList.add('hidden');
-            feedback.textContent = 'The passenger left disappointed...';
-            feedback.className = 'day2-feedback error show';
-            setTimeout(() => {
-                day2State.currentPassenger++;
-                showPassenger(day2State.currentPassenger);
-            }, 1500);
-        } else {
-            // First wrong - try again (keep content visible)
-            content.classList.add('hidden');
-            feedback.textContent = 'Not quite... Try again!';
-            feedback.className = 'day2-feedback error show';
-            // Show content again after brief moment
-            setTimeout(() => {
-                feedback.className = 'day2-feedback';
-                content.classList.remove('hidden');
-            }, 1000);
+        // Wrong - decrease satisfaction
+        day2State.satisfaction--;
+        updateSatisfactionBar();
+        animateSatisfactionChange('down');
+
+        // Check for game over
+        if (checkGameOver()) {
+            return; // checkGameOver handles the popup and restart
         }
+
+        // Wrong but still alive - show feedback briefly, then continue
+        content.classList.add('hidden');
+        feedback.textContent = 'Not quite... Try again!';
+        feedback.className = 'day2-feedback error show';
+
+        // Show passenger content again after brief moment
+        setTimeout(() => {
+            feedback.className = 'day2-feedback';
+            content.classList.remove('hidden');
+        }, 1000);
     }
 }
 
@@ -892,8 +1045,27 @@ function endDay2() {
     day2State.gameEnded = true;
     document.getElementById('day2-game-area').style.display = 'none';
     document.getElementById('day2-summary').style.display = 'block';
-    document.getElementById('day2-final-score').textContent =
-        `${day2State.score}/8 passengers decided to stay.`;
+
+    // Calculate title and text based on final satisfaction
+    let title, text;
+    if (day2State.satisfaction >= 5) {
+        title = 'Perfect Day!';
+        text = 'Incredible! Every passenger left absolutely delighted. Otowa is trending on social media and reservations are pouring in!';
+    } else if (day2State.satisfaction >= 4) {
+        title = 'Outstanding Work!';
+        text = 'Word is spreading fast! Several passengers are already posting about Otowa on social media. The village has never felt so alive!';
+    } else if (day2State.satisfaction >= 3) {
+        title = 'Great Job!';
+        text = 'The passengers were pleased with their experience. Some mentioned they might come back again with friends!';
+    } else if (day2State.satisfaction >= 2) {
+        title = 'Day Complete';
+        text = 'You made it through all the passengers. With more practice, you\'ll have them raving about Otowa in no time!';
+    } else {
+        title = 'A Challenging Day';
+        text = 'It was a tough day, but you persevered. Tomorrow is another chance to show off what Otowa has to offer!';
+    }
+    document.getElementById('day2-final-score').textContent = title;
+    document.getElementById('day2-final-text').textContent = text;
 }
 
 // Day 2 Drag and Drop
@@ -1030,11 +1202,597 @@ function goToPage(pageId) {
         resetTutorial();
     }
 
-    // Unlock station items on page 8
+    // Unlock station items on page 8 and blink inventory button
     if (pageId === 8) {
         unlockInventoryItem('bi');
         unlockInventoryItem('stone');
+        // Start blinking the inventory button
+        const page8InvBtn = document.querySelector('.page8-inventory-btn');
+        if (page8InvBtn) {
+            page8InvBtn.classList.add('blink');
+        }
     }
 
     window.scrollTo(0, 0);
 }
+
+// ==================== TUTORIAL LEVEL ====================
+
+// Tutorial level passengers (only 2)
+const tlPassengers = [
+    {
+        emoji: '🦊',
+        label: 'Hot spring',
+        answer: 'stone',
+        dialogue: "I've heard this village has beautiful hot springs. Do you have anything related?"
+    },
+    {
+        emoji: '🐦',
+        label: 'Bird watching',
+        answer: 'bi',
+        dialogue: 'Hello! I love birdwatching. Is there anything here that could help me spot rare birds?'
+    }
+];
+
+// Tutorial level state
+let tlState = {
+    currentPassenger: 0,
+    satisfaction: 2,  // Range 0-4, start at middle (2)
+    fixedLabels: {},
+    gameEnded: false,
+    clickCooldown: false
+};
+
+// JIT Tutorial tracking
+let jitShown = {
+    welcome: false,
+    notes: false,
+    labels: false,
+    items: false,
+    wrongAnswer: false,
+    correctAnswer: false
+};
+
+// Current tutorial step for sequence
+let jitCurrentStep = 0;
+
+// JIT Tutorial content
+const jitContent = {
+    welcome: {
+        title: 'Welcome!',
+        body: '<p>Match items to what visitors are looking for.</p><p>Click an item to present it.</p>',
+        focus: null
+    },
+    notes: {
+        title: 'Notes',
+        body: '<p>Read the notes to learn about your items.</p>',
+        focus: 'notes'
+    },
+    labels: {
+        title: 'Labels',
+        body: '<p>Figure out which labels belong to which items.</p>',
+        focus: 'labels'
+    },
+    items: {
+        title: 'Items',
+        body: '<p>Based on what the visitor wants, click the correct item!</p>',
+        focus: 'items'
+    },
+    wrongAnswer: {
+        title: 'Try Again',
+        body: '<p>That wasn\'t quite right.</p><p>You have one more chance!</p>',
+        focus: null
+    },
+    correctAnswer: {
+        title: 'Nice!',
+        body: '<p>The label is now fixed on that item.</p>',
+        focus: null
+    }
+};
+
+// Tutorial sequence for intro
+const jitIntroSequence = ['welcome', 'notes', 'labels', 'items'];
+
+function showJitPopup(key) {
+    if (jitShown[key]) return;
+    jitShown[key] = true;
+
+    const content = jitContent[key];
+    document.getElementById('jit-content').innerHTML = `
+        <div class="jit-title">${content.title}</div>
+        <div class="jit-body">${content.body}</div>
+    `;
+
+    // Apply focus highlight
+    clearJitFocus();
+    const page = document.querySelector('.page-tutorial-level');
+    if (content.focus && page) {
+        page.classList.add('jit-focus-' + content.focus);
+    }
+
+    // Block all interactions during intro sequence
+    if (jitCurrentStep < jitIntroSequence.length && page) {
+        page.classList.add('jit-intro-active');
+    }
+
+    document.getElementById('jit-overlay').classList.add('show');
+    document.getElementById('jit-popup').classList.add('show');
+}
+
+function closeJitPopup() {
+    document.getElementById('jit-overlay').classList.remove('show');
+    document.getElementById('jit-popup').classList.remove('show');
+    clearJitFocus();
+
+    // Check if we need to show next in sequence
+    jitCurrentStep++;
+    if (jitCurrentStep < jitIntroSequence.length) {
+        setTimeout(() => {
+            showJitPopup(jitIntroSequence[jitCurrentStep]);
+        }, 300);
+    } else {
+        // Intro sequence finished, enable interactions
+        const page = document.querySelector('.page-tutorial-level');
+        if (page) {
+            page.classList.remove('jit-intro-active');
+        }
+    }
+}
+
+function clearJitFocus() {
+    const page = document.querySelector('.page-tutorial-level');
+    if (page) {
+        page.classList.remove('jit-focus-notes', 'jit-focus-labels', 'jit-focus-items');
+    }
+}
+
+function startTutorialLevel() {
+    // Reset state
+    tlState = {
+        currentPassenger: 0,
+        satisfaction: 2,  // Start at middle (range 0-4)
+        fixedLabels: {},
+        gameEnded: false,
+        clickCooldown: false
+    };
+
+    // Reset JIT
+    jitShown = {
+        welcome: false,
+        notes: false,
+        labels: false,
+        items: false,
+        wrongAnswer: false,
+        correctAnswer: false
+    };
+    jitCurrentStep = 0;
+
+    // Reset UI
+    document.getElementById('tl-game-area').style.display = 'block';
+    document.getElementById('tl-summary').style.display = 'none';
+    document.getElementById('tl-feedback').textContent = '';
+    document.getElementById('tl-feedback').className = 'tl-feedback';
+
+    // Reset all slots
+    document.querySelectorAll('.tl-slot').forEach(slot => {
+        slot.classList.remove('filled', 'fixed', 'drag-over');
+        slot.innerHTML = '';
+        slot.dataset.labelText = '';
+    });
+
+    // Reset all labels
+    document.querySelectorAll('#tl-label-pool .tl-label').forEach(label => {
+        label.classList.remove('in-slot', 'fixed', 'dragging');
+    });
+
+    // Initialize satisfaction bar
+    updateTlSatisfactionBar();
+
+    // Go to page
+    goToPage('tutorial-level');
+
+    // Show welcome popup
+    setTimeout(() => showJitPopup('welcome'), 500);
+
+    // Show first passenger
+    showTlPassenger(0);
+}
+
+// Tutorial Level Satisfaction Bar Functions
+function updateTlSatisfactionBar() {
+    const segments = document.querySelectorAll('.tl-sat-segment');
+    segments.forEach((segment, index) => {
+        if (index < tlState.satisfaction) {
+            segment.classList.add('filled');
+        } else {
+            segment.classList.remove('filled');
+        }
+    });
+}
+
+function animateTlSatisfactionChange(direction) {
+    const segments = document.querySelectorAll('.tl-sat-segment');
+    let targetIndex;
+
+    if (direction === 'up') {
+        targetIndex = tlState.satisfaction - 1;
+        if (targetIndex >= 0 && targetIndex < segments.length) {
+            segments[targetIndex].classList.add('pulse-up');
+            setTimeout(() => segments[targetIndex].classList.remove('pulse-up'), 400);
+        }
+    } else {
+        targetIndex = tlState.satisfaction;
+        if (targetIndex >= 0 && targetIndex < segments.length) {
+            segments[targetIndex].classList.add('pulse-down');
+            setTimeout(() => segments[targetIndex].classList.remove('pulse-down'), 400);
+        }
+    }
+}
+
+function showTlPassenger(index) {
+    if (index >= tlPassengers.length) {
+        endTutorialLevel();
+        return;
+    }
+
+    const passenger = tlPassengers[index];
+    document.getElementById('tl-passenger-avatar').textContent = passenger.emoji;
+    document.getElementById('tl-passenger-num').textContent = index + 1;
+    document.getElementById('tl-dialogue').textContent = passenger.dialogue;
+    document.getElementById('tl-request-label').textContent = passenger.label;
+    tlState.attempts = 0;
+
+    // Reset feedback
+    document.getElementById('tl-feedback').textContent = '';
+    document.getElementById('tl-feedback').className = 'tl-feedback';
+    document.getElementById('tl-passenger-content').classList.remove('hidden');
+}
+
+function tlSelectItem(itemId) {
+    if (tlState.gameEnded) return;
+    if (tlState.clickCooldown) return;
+
+    tlState.clickCooldown = true;
+    setTimeout(() => { tlState.clickCooldown = false; }, 1000);
+
+    const passenger = tlPassengers[tlState.currentPassenger];
+    const feedback = document.getElementById('tl-feedback');
+    const content = document.getElementById('tl-passenger-content');
+
+    if (itemId === passenger.answer) {
+        // Correct!
+        content.classList.add('hidden');
+        feedback.textContent = 'The visitor is delighted!';
+        feedback.className = 'tl-feedback success show';
+
+        // Increase satisfaction (max 5)
+        if (tlState.satisfaction < 5) {
+            tlState.satisfaction++;
+            updateTlSatisfactionBar();
+            animateTlSatisfactionChange('up');
+        }
+
+        // Fix the label
+        fixTlLabel(itemId, passenger.label);
+
+        // Show correct JIT
+        setTimeout(() => showJitPopup('correctAnswer'), 500);
+
+        // Next passenger
+        setTimeout(() => {
+            tlState.currentPassenger++;
+            showTlPassenger(tlState.currentPassenger);
+        }, 2000);
+    } else {
+        // Wrong - decrease satisfaction
+        tlState.satisfaction--;
+        updateTlSatisfactionBar();
+        animateTlSatisfactionChange('down');
+
+        // Check for game over (satisfaction = 0)
+        if (tlState.satisfaction === 0) {
+            tlState.gameEnded = true;
+            content.classList.add('hidden');
+            feedback.textContent = 'Satisfaction dropped to zero...';
+            feedback.className = 'tl-feedback error show';
+            setTimeout(() => {
+                restartTutorialLevel();
+            }, 2000);
+            return;
+        }
+
+        // Wrong but still alive - show feedback briefly
+        content.classList.add('hidden');
+        feedback.textContent = 'Not quite... Try again!';
+        feedback.className = 'tl-feedback error show';
+        setTimeout(() => {
+            feedback.className = 'tl-feedback';
+            content.classList.remove('hidden');
+        }, 1000);
+    }
+}
+
+function restartTutorialLevel() {
+    // Reset state
+    tlState.currentPassenger = 0;
+    tlState.satisfaction = 2;
+    tlState.fixedLabels = {};
+    tlState.gameEnded = false;
+    tlState.clickCooldown = false;
+
+    // Reset UI
+    document.getElementById('tl-feedback').textContent = '';
+    document.getElementById('tl-feedback').className = 'tl-feedback';
+
+    // Reset all slots
+    document.querySelectorAll('.tl-slot').forEach(slot => {
+        slot.classList.remove('filled', 'fixed', 'drag-over');
+        slot.innerHTML = '';
+        slot.dataset.labelText = '';
+    });
+
+    // Reset all labels
+    document.querySelectorAll('#tl-label-pool .tl-label').forEach(label => {
+        label.classList.remove('in-slot', 'fixed', 'dragging');
+    });
+
+    // Update satisfaction bar
+    updateTlSatisfactionBar();
+
+    // Show first passenger
+    showTlPassenger(0);
+}
+
+function fixTlLabel(itemId, label) {
+    const slots = document.querySelectorAll(`.tl-item-slots[data-item="${itemId}"] .tl-slot`);
+    let slotToFix = null;
+
+    slots.forEach(slot => {
+        if (slot.dataset.labelText === label) {
+            slotToFix = slot;
+        }
+    });
+
+    if (!slotToFix) {
+        slots.forEach(slot => {
+            if (!slotToFix && !slot.classList.contains('filled') && !slot.classList.contains('fixed')) {
+                slotToFix = slot;
+            }
+        });
+    }
+
+    if (slotToFix) {
+        slotToFix.classList.remove('filled');
+        slotToFix.classList.add('fixed');
+        slotToFix.innerHTML = `<span class="tl-slot-text">${label}</span>`;
+        slotToFix.dataset.labelText = label;
+    }
+
+    // Hide label from pool
+    document.querySelectorAll('#tl-label-pool .tl-label').forEach(labelEl => {
+        if (labelEl.dataset.label === label) {
+            labelEl.classList.add('fixed');
+        }
+    });
+
+    // Track
+    if (!tlState.fixedLabels[itemId]) {
+        tlState.fixedLabels[itemId] = [];
+    }
+    if (!tlState.fixedLabels[itemId].includes(label)) {
+        tlState.fixedLabels[itemId].push(label);
+    }
+}
+
+function endTutorialLevel() {
+    tlState.gameEnded = true;
+    document.getElementById('tl-game-area').style.display = 'none';
+    document.getElementById('tl-summary').style.display = 'block';
+
+    // Show message based on satisfaction level
+    let message;
+    if (tlState.satisfaction >= 4) {
+        message = 'Excellent! The visitors were very impressed!';
+    } else if (tlState.satisfaction >= 3) {
+        message = 'Well done! You handled both visitors nicely!';
+    } else {
+        message = 'You made it through! Keep practicing!';
+    }
+    document.getElementById('tl-final-score').textContent = message;
+}
+
+// Tutorial Level Drag and Drop
+let tlDraggedLabel = null;
+
+function tlDragStart(event) {
+    tlDraggedLabel = event.target;
+    event.target.classList.add('dragging');
+    event.dataTransfer.setData('text/plain', event.target.dataset.label);
+    event.dataTransfer.effectAllowed = 'move';
+    showJitPopup('labelDrag');
+}
+
+function tlDragEnd(event) {
+    event.target.classList.remove('dragging');
+    document.querySelectorAll('.tl-slot').forEach(slot => {
+        slot.classList.remove('drag-over');
+    });
+}
+
+function tlDragOver(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    const slot = event.target.closest('.tl-slot');
+    if (slot && !slot.classList.contains('filled') && !slot.classList.contains('fixed')) {
+        slot.classList.add('drag-over');
+    }
+}
+
+function tlDragLeave(event) {
+    event.preventDefault();
+    const slot = event.target.closest('.tl-slot');
+    if (slot) {
+        slot.classList.remove('drag-over');
+    }
+}
+
+function tlDrop(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    const slot = event.target.closest('.tl-slot');
+    if (!slot || slot.classList.contains('filled') || slot.classList.contains('fixed')) return;
+
+    slot.classList.remove('drag-over');
+
+    const labelText = event.dataTransfer.getData('text/plain');
+    if (!labelText) return;
+
+    slot.classList.add('filled');
+    slot.innerHTML = `<span class="tl-slot-text">${labelText}</span>`;
+    slot.dataset.labelText = labelText;
+
+    if (tlDraggedLabel) {
+        tlDraggedLabel.classList.add('in-slot');
+    }
+}
+
+function tlRemoveLabel(event) {
+    event.stopPropagation();
+    const slot = event.target.closest('.tl-slot');
+    if (!slot || !slot.classList.contains('filled') || slot.classList.contains('fixed')) return;
+
+    const labelText = slot.dataset.labelText;
+
+    slot.classList.remove('filled');
+    slot.innerHTML = '';
+    slot.dataset.labelText = '';
+
+    document.querySelectorAll('#tl-label-pool .tl-label').forEach(label => {
+        if (label.dataset.label === labelText) {
+            label.classList.remove('in-slot');
+        }
+    });
+}
+
+// ==================== ITEM OBTAINED POPUP ====================
+
+// Track which items have already triggered popups
+let itemPopupShown = {
+    mash: false,
+    sake: false,
+    o: false
+};
+
+// Item data for popup
+const itemPopupData = {
+    mash: { name: 'Mushroom', img: 'mash.png' },
+    sake: { name: 'Senbonzuru Sake', img: 'sake.png' },
+    o: { name: 'Amulet', img: 'o.png' }
+};
+
+function showItemPopup(itemId) {
+    if (itemPopupShown[itemId]) return;
+    itemPopupShown[itemId] = true;
+
+    const data = itemPopupData[itemId];
+    if (!data) return;
+
+    // Update popup content
+    document.getElementById('item-popup-img').innerHTML = `<img src="${data.img}" alt="${data.name}">`;
+    document.getElementById('item-popup-name').textContent = data.name;
+
+    // Show popup
+    document.getElementById('item-popup-overlay').classList.add('show');
+    document.getElementById('item-popup').classList.add('show');
+
+    // Highlight inventory buttons
+    highlightInventoryButtons();
+}
+
+function closeItemPopup() {
+    document.getElementById('item-popup-overlay').classList.remove('show');
+    document.getElementById('item-popup').classList.remove('show');
+}
+
+function highlightInventoryButtons() {
+    // Highlight the top-right inventory button
+    const invBtn = document.querySelector('.inventory-btn');
+    if (invBtn) {
+        invBtn.classList.add('highlight');
+    }
+
+    // Highlight floating sidebar inventory button (if on page with it)
+    document.querySelectorAll('.floating-btn').forEach(btn => {
+        if (btn.textContent.trim() === 'Inventory') {
+            btn.classList.add('highlight');
+        }
+    });
+}
+
+function removeInventoryHighlight() {
+    // Remove highlight from top-right inventory button
+    const invBtn = document.querySelector('.inventory-btn');
+    if (invBtn) {
+        invBtn.classList.remove('highlight');
+    }
+
+    // Remove highlight from floating sidebar buttons
+    document.querySelectorAll('.floating-btn').forEach(btn => {
+        btn.classList.remove('highlight');
+    });
+}
+
+// Override toggleInventory to remove highlight when clicked
+const originalToggleInventory = toggleInventory;
+toggleInventory = function() {
+    removeInventoryHighlight();
+    originalToggleInventory();
+};
+
+// Scroll-based item popup trigger using Intersection Observer
+function setupItemPopupObservers() {
+    const observerOptions = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.6 // Trigger when 60% of element is visible
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const itemObtained = entry.target;
+                const itemId = itemObtained.dataset.itemId;
+                if (itemId && !itemPopupShown[itemId]) {
+                    showItemPopup(itemId);
+                }
+            }
+        });
+    }, observerOptions);
+
+    // Find all item-obtained elements and add data attributes
+    // Ryotei branch 1: Mushroom
+    const ryoteiBranch1 = document.querySelector('#ryotei-branch1 .item-obtained');
+    if (ryoteiBranch1) {
+        ryoteiBranch1.dataset.itemId = 'mash';
+        observer.observe(ryoteiBranch1);
+    }
+
+    // Ryotei branch 2: Sake
+    const ryoteiBranch2 = document.querySelector('#ryotei-branch2 .item-obtained');
+    if (ryoteiBranch2) {
+        ryoteiBranch2.dataset.itemId = 'sake';
+        observer.observe(ryoteiBranch2);
+    }
+
+    // Hotspring branch 1: Amulet
+    const hotspringBranch1 = document.querySelector('#hotspring-branch1 .item-obtained');
+    if (hotspringBranch1) {
+        hotspringBranch1.dataset.itemId = 'o';
+        observer.observe(hotspringBranch1);
+    }
+}
+
+// Initialize observers when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    setupItemPopupObservers();
+});

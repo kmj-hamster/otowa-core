@@ -263,15 +263,16 @@
 
     <!-- Page 8: Items Obtained -->
     <div class="page page-items" id="page-8">
+        <div class="page8-inventory-btn" onclick="page8InventoryClick()">Inventory</div>
         <div class="items-container">
             <h2 class="items-title">You obtained these items from the messy stationmaster's office</h2>
             <div class="items-panel">
             <div class="items-grid">
-                <div class="item-card">
+                <div class="item-card" onclick="page8InventoryClick()">
                     <div class="item-glow"></div>
                     <img src="bi.png" alt="Binoculars">
                 </div>
-                <div class="item-card">
+                <div class="item-card" onclick="page8InventoryClick()">
                     <div class="item-glow"></div>
                     <img src="stone.png" alt="Mysterious Stone">
                 </div>
@@ -279,15 +280,154 @@
             </div>
             <div class="nav-buttons">
                 <button class="nav-btn" onclick="goToPage(7)">PREVIOUS</button>
-                <button class="nav-btn" onclick="goToPage(9)">NEXT</button>
+                <button class="nav-btn" onclick="goToPage('8b')">NEXT</button>
             </div>
         </div>
+    </div>
+
+    <!-- Page 8b: Transition - Unexpected Visitors -->
+    <div class="page page-transition" id="page-8b">
+        <div class="transition-container">
+            <div class="transition-content">
+                <div class="transition-icon">!</div>
+                <h2 class="transition-title">UNEXPECTED VISITORS</h2>
+                <p class="transition-text">Before you could even organize the station...</p>
+                <p class="transition-text">...the morning train arrives with passengers already peering out.</p>
+                <p class="transition-text">You're not fully prepared, but you'll have to do your best!</p>
+                <p class="transition-hint">(Don't worry - only a few visitors today)</p>
+            </div>
+            <div class="nav-buttons">
+                <button class="nav-btn" onclick="goToPage(8)">PREVIOUS</button>
+                <button class="nav-btn" onclick="startTutorialLevel()">BEGIN</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page Tutorial Level: Simplified Gameplay -->
+    <div class="page page-tutorial-level" id="page-tutorial-level">
+        <div class="tl-layout">
+            <!-- Left Panel: Quick Notes -->
+            <div class="tl-journal-panel">
+                <div class="tl-journal-wrapper">
+                    <div class="tl-journal-header">Quick Notes</div>
+                    <div class="tl-journal-content">
+                        <p class="tl-journal-text"><strong>Binoculars:</strong> An old man gave these to me. He said he had upgraded to better gear and didn't need them anymore. He spends every day in the forest, though I'm not sure what he's doing there.</p>
+                        <p class="tl-journal-text"><strong>Onsen Stone:</strong> This stone is beautiful. Although it's black, it reflects colorful light. This mineral seems to be unique to Otowa, probably related to the hot spring environment here.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel: Game UI -->
+            <div class="tl-game-panel">
+                <div class="tl-container">
+                    <div class="tl-header">
+                        <div class="tl-title">FIRST VISITORS</div>
+                    </div>
+
+                    <!-- Game Area -->
+                    <div id="tl-game-area">
+                        <!-- Passenger Box -->
+                        <div class="tl-passenger-box">
+                            <div id="tl-passenger-content">
+                                <div class="tl-passenger-header">
+                                    <span class="tl-passenger-avatar" id="tl-passenger-avatar">🦊</span>
+                                    <span class="tl-passenger-number">Visitor <span id="tl-passenger-num">1</span> / 2</span>
+                                </div>
+                                <div class="tl-dialogue" id="tl-dialogue">Dialogue here...</div>
+                                <div class="tl-request">
+                                    Looking for: <span class="tl-request-label" id="tl-request-label">Label</span>
+                                </div>
+                            </div>
+                            <div class="tl-feedback" id="tl-feedback"></div>
+                        </div>
+
+                        <!-- Items Section (only 2 items) -->
+                        <div class="tl-items-section">
+                            <div class="tl-items-title">YOUR ITEMS (Click to present)</div>
+                            <div class="tl-items-grid">
+                                <!-- Binoculars -->
+                                <div class="tl-item-card">
+                                    <div class="tl-item-slots" data-item="bi">
+                                        <div class="tl-slot" data-slot="0" ondragover="tlDragOver(event)" ondragleave="tlDragLeave(event)" ondrop="tlDrop(event)" onclick="tlRemoveLabel(event)"></div>
+                                        <div class="tl-slot" data-slot="1" ondragover="tlDragOver(event)" ondragleave="tlDragLeave(event)" ondrop="tlDrop(event)" onclick="tlRemoveLabel(event)"></div>
+                                    </div>
+                                    <div class="tl-item-img" onclick="tlSelectItem('bi')">
+                                        <img src="bi.png" alt="Binoculars">
+                                    </div>
+                                    <div class="tl-item-name">Binoculars</div>
+                                </div>
+
+                                <!-- Onsen Stone -->
+                                <div class="tl-item-card">
+                                    <div class="tl-item-slots" data-item="stone">
+                                        <div class="tl-slot" data-slot="0" ondragover="tlDragOver(event)" ondragleave="tlDragLeave(event)" ondrop="tlDrop(event)" onclick="tlRemoveLabel(event)"></div>
+                                        <div class="tl-slot" data-slot="1" ondragover="tlDragOver(event)" ondragleave="tlDragLeave(event)" ondrop="tlDrop(event)" onclick="tlRemoveLabel(event)"></div>
+                                    </div>
+                                    <div class="tl-item-img" onclick="tlSelectItem('stone')">
+                                        <img src="stone.png" alt="Onsen Stone">
+                                    </div>
+                                    <div class="tl-item-name">Onsen Stone</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Label Pool (only 4 labels) -->
+                        <div class="tl-pool">
+                            <div class="tl-pool-title">LABEL POOL</div>
+                            <div class="tl-pool-labels" id="tl-label-pool">
+                                <span class="tl-label" draggable="true" ondragstart="tlDragStart(event)" ondragend="tlDragEnd(event)" data-label="Bird watching">Bird watching</span>
+                                <span class="tl-label" draggable="true" ondragstart="tlDragStart(event)" ondragend="tlDragEnd(event)" data-label="Hot spring">Hot spring</span>
+                                <span class="tl-label" draggable="true" ondragstart="tlDragStart(event)" ondragend="tlDragEnd(event)" data-label="Rintaro">Rintaro</span>
+                                <span class="tl-label" draggable="true" ondragstart="tlDragStart(event)" ondragend="tlDragEnd(event)" data-label="Mizuki">Mizuki</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Summary (hidden initially) -->
+                    <div id="tl-summary" style="display: none;">
+                        <div class="tl-summary-box">
+                            <div class="tl-summary-title">Well Done!</div>
+                            <div class="tl-summary-score" id="tl-final-score">You handled both visitors successfully!</div>
+                            <div class="tl-summary-text">Now explore the village to learn more about Otowa!</div>
+                        </div>
+                        <div class="nav-buttons">
+                            <button class="nav-btn" onclick="goToPage(9)">EXPLORE THE VILLAGE</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- JIT Tutorial Popup -->
+    <div class="jit-overlay" id="jit-overlay" onclick="closeJitPopup()"></div>
+    <div class="jit-popup" id="jit-popup">
+        <div class="jit-content" id="jit-content"></div>
+        <button class="jit-btn" onclick="closeJitPopup()">Got it!</button>
+    </div>
+
+    <!-- Game Over Popup (Day 2) -->
+    <div class="gameover-popup-overlay" id="gameover-popup-overlay"></div>
+    <div class="gameover-popup" id="gameover-popup">
+        <div class="gameover-popup-icon">😞</div>
+        <div class="gameover-popup-title">Satisfaction Lost!</div>
+        <div class="gameover-popup-text">The passengers are unhappy. Let's try again from the beginning!</div>
+        <button class="gameover-popup-btn" onclick="closeGameOverPopup()">Restart</button>
+    </div>
+
+    <!-- Item Obtained Popup -->
+    <div class="item-popup-overlay" id="item-popup-overlay" onclick="closeItemPopup()"></div>
+    <div class="item-popup" id="item-popup">
+        <div class="item-popup-title">Item Obtained!</div>
+        <div class="item-popup-img" id="item-popup-img"></div>
+        <div class="item-popup-name" id="item-popup-name"></div>
+        <button class="item-popup-btn" onclick="closeItemPopup()">OK</button>
     </div>
 
     <!-- Page 12: Ryotei -->
     <div class="page page-opening" id="page-ryotei">
         <div class="floating-sidebar">
-            <button class="floating-btn" onclick="goToPage('note')">Journal</button>
             <button class="floating-btn" onclick="toggleInventory()">Inventory</button>
         </div>
         <div class="container">
@@ -361,7 +501,6 @@
     <!-- Page 11: Hot Spring -->
     <div class="page page-opening" id="page-hotspring">
         <div class="floating-sidebar">
-            <button class="floating-btn" onclick="goToPage('note')">Journal</button>
             <button class="floating-btn" onclick="toggleInventory()">Inventory</button>
         </div>
         <div class="container">
@@ -419,7 +558,6 @@
     <!-- Page 10: Forest -->
     <div class="page page-opening" id="page-forest">
         <div class="floating-sidebar">
-            <button class="floating-btn" onclick="goToPage('note')">Journal</button>
             <button class="floating-btn" onclick="toggleInventory()">Inventory</button>
         </div>
         <div class="container">
@@ -452,7 +590,7 @@
             </div>
 
             <div class="nav-buttons">
-                <button class="nav-btn" onclick="goToPage(9)">RETURN TO MAP</button>
+                <button class="nav-btn" onclick="returnFromForest()">RETURN TO MAP</button>
             </div>
         </div>
     </div>
@@ -579,7 +717,7 @@
                         </div>
                     </div>
                     <p class="tutorial-text">Every label here belongs to one of your items - <strong>no distractions</strong>.</p>
-                    <p class="tutorial-text">But some labels must be discovered through exploration...</p>
+                    <p class="tutorial-text">Some labels may fit multiple items. Match them to the <strong>most relevant</strong> one — sometimes it takes a bit of deduction.</p>
                     <p class="tutorial-step-indicator">Step 4 / 8</p>
                 </div>
 
@@ -692,10 +830,13 @@
                             <span class="tutorial-label">Mizuki</span>
                             <span class="tutorial-label">Rintaro</span>
                         </div>
-                        <div class="tutorial-counter">+1 Passenger</div>
+                        <div class="tutorial-satisfaction-demo">
+                            <span class="tutorial-sat-text">Satisfaction</span>
+                            <span class="tutorial-sat-up">▲</span>
+                        </div>
                     </div>
-                    <p class="tutorial-text">When you match correctly, the label is <strong>confirmed</strong>.</p>
-                    <p class="tutorial-text">The passenger decides to stay in Otowa!</p>
+                    <p class="tutorial-text">When you match correctly, the label is <strong>confirmed</strong> and satisfaction goes up!</p>
+                    <p class="tutorial-text">Wrong answers decrease satisfaction. If it hits zero, you'll have to restart.</p>
                     <p class="tutorial-text">Now you're ready to welcome the day's visitors.</p>
                     <p class="tutorial-step-indicator">Step 8 / 8</p>
                 </div>
@@ -764,6 +905,17 @@
                     <div id="day2-game-area">
                 <!-- Passenger Box -->
                 <div class="day2-passenger-box">
+                    <!-- Satisfaction Bar (top-right of passenger box) -->
+                    <div class="day2-satisfaction-wrapper">
+                        <div class="day2-satisfaction-label">Satisfaction</div>
+                        <div class="day2-satisfaction-bar">
+                            <div class="sat-segment" data-index="0"></div>
+                            <div class="sat-segment" data-index="1"></div>
+                            <div class="sat-segment" data-index="2"></div>
+                            <div class="sat-segment" data-index="3"></div>
+                            <div class="sat-segment" data-index="4"></div>
+                        </div>
+                    </div>
                     <div id="day2-passenger-content">
                         <div class="day2-passenger-header">
                             <span class="day2-passenger-avatar" id="day2-passenger-avatar">🐦</span>
@@ -862,10 +1014,8 @@
             <div id="day2-summary" style="display: none;">
                 <div class="day2-summary">
                     <div class="day2-summary-title">Day 2 Complete!</div>
-                    <div class="day2-summary-score" id="day2-final-score">8/8 passengers decided to stay.</div>
-                    <div class="day2-summary-text">
-                        Great work today! The village is already feeling more lively.
-                    </div>
+                    <div class="day2-summary-score" id="day2-final-score"></div>
+                    <div class="day2-summary-text" id="day2-final-text"></div>
                 </div>
                 <div class="nav-buttons">
                     <button class="nav-btn" onclick="goToPage('thanks')">Continue</button>
@@ -875,13 +1025,6 @@
             </div>
         </div>
 
-        <!-- Passenger Counter (fixed bottom right) -->
-        <div class="day2-counter-wrapper">
-            <div class="day2-counter">
-                Passengers: <span id="day2-score">0</span> / 8
-                <span class="day2-plus-one" id="day2-plus-one">+1</span>
-            </div>
-        </div>
     </div>
 
     <!-- Thanks Page -->
