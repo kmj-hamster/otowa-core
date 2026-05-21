@@ -15,11 +15,11 @@ let inventoryOpen = false;
 let selectedInventorySlot = -1;
 
 const inventoryItems = [
-    { id: 'mash', name: 'Mushroom Dish', from: 'Ryotei', labels: ['???', '???', '???'], unlocked: false },
+    { id: 'mash', name: 'Mushroom', from: 'Ryotei', labels: ['???', '???', '???'], unlocked: false },
     { id: 'sake', name: 'Senbonzuru Sake', from: 'Ryotei', labels: ['???', '???', '???'], unlocked: false },
     { id: 'o', name: 'Amulet', from: 'Hot Spring', labels: ['???', '???', '???'], unlocked: false },
-    { id: 'stone', name: 'Onsen Stone', from: 'Hot Spring', labels: ['???', '???', '???'], unlocked: false },
-    { id: 'bi', name: 'Binoculars', from: 'Forest', labels: ['???', '???', '???'], unlocked: false }
+    { id: 'stone', name: 'Onsen Stone', from: 'Station', labels: ['???', '???', '???'], unlocked: false },
+    { id: 'bi', name: 'Binoculars', from: 'Station', labels: ['???', '???', '???'], unlocked: false }
 ];
 
 function toggleInventory() {
@@ -45,8 +45,8 @@ function updateInventoryDisplay() {
     document.getElementById('inventory-count').textContent = unlockedCount;
 }
 
-function selectInventoryItem(slotIndex) {
-    if (slotIndex >= inventoryItems.length || !inventoryItems[slotIndex].unlocked) return;
+function hoverInventoryItem(slotIndex) {
+    if (slotIndex >= inventoryItems.length) return;
 
     // Remove active from previous
     document.querySelectorAll('.inventory-slot').forEach(slot => slot.classList.remove('active'));
@@ -58,18 +58,35 @@ function selectInventoryItem(slotIndex) {
     const item = inventoryItems[slotIndex];
     const detail = document.getElementById('inventory-detail');
 
-    let labelsHtml = item.labels.map(label =>
-        `<span class="inventory-label">${label}</span>`
-    ).join('');
+    if (!item.unlocked) {
+        // Show locked state
+        detail.innerHTML = `
+            <div class="inventory-detail-img">
+                <span style="color: #3a5a3a; font-size: 2.5rem;">?</span>
+            </div>
+            <div class="inventory-detail-name">???</div>
+            <div class="inventory-detail-from">Not yet obtained</div>
+            <div class="inventory-labels">
+                <span class="inventory-label">???</span>
+                <span class="inventory-label">???</span>
+                <span class="inventory-label">???</span>
+            </div>
+        `;
+    } else {
+        // Show unlocked state
+        let labelsHtml = item.labels.map(label =>
+            `<span class="inventory-label">${label}</span>`
+        ).join('');
 
-    detail.innerHTML = `
-        <div class="inventory-detail-img">
-            <img src="${item.id}.png" alt="${item.name}">
-        </div>
-        <div class="inventory-detail-name">${item.name}</div>
-        <div class="inventory-detail-from">Obtained from: ${item.from}</div>
-        <div class="inventory-labels">${labelsHtml}</div>
-    `;
+        detail.innerHTML = `
+            <div class="inventory-detail-img">
+                <img src="${item.id}.png" alt="${item.name}">
+            </div>
+            <div class="inventory-detail-name">${item.name}</div>
+            <div class="inventory-detail-from">Obtained from: ${item.from}</div>
+            <div class="inventory-labels">${labelsHtml}</div>
+        `;
+    }
 }
 
 function unlockInventoryItem(itemId) {
@@ -94,7 +111,6 @@ function visitLocation(location) {
     }
     if (location === 'forest') {
         forestVisited = true;
-        unlockInventoryItem('bi');
         updateNoteContent();
         goToPage('forest');
         return;
@@ -157,7 +173,6 @@ function showHotspringExplored() {
     document.getElementById('hotspring-btn2').textContent = 'RETURN TO MAP';
     document.getElementById('hotspring-btn2').onclick = function() { goToPage(9); };
     unlockInventoryItem('o');
-    unlockInventoryItem('stone');
 }
 
 function hotspringChoice(choice) {
@@ -173,7 +188,6 @@ function hotspringChoice(choice) {
         unlockInventoryItem('o');
     } else if (choice === 2) {
         hotspringBranch2Read = true;
-        unlockInventoryItem('stone');
     }
 
     updateHotspringNav(choice);
@@ -461,12 +475,6 @@ function tutorialSelectItem(itemId) {
         feedback.classList.add('success');
         tutorialItemSelected = true;
         tutorialSelectedItemId = itemId;
-
-        // Disable further clicks
-        items.forEach(item => {
-            item.classList.remove('clickable');
-            item.onclick = null;
-        });
     } else {
         // Wrong answer
         clickedItem.classList.add('wrong');
@@ -1020,6 +1028,12 @@ function goToPage(pageId) {
     // Reset tutorial when entering
     if (pageId === 'tutorial') {
         resetTutorial();
+    }
+
+    // Unlock station items on page 8
+    if (pageId === 8) {
+        unlockInventoryItem('bi');
+        unlockInventoryItem('stone');
     }
 
     window.scrollTo(0, 0);
